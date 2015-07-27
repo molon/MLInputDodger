@@ -8,6 +8,22 @@
 
 #import "ViewController.h"
 #import "UIView+MLInputDodger.h"
+#import <MLKit/MLKit.h>
+
+
+@interface TestView:UIView
+@end
+
+@implementation TestView
+
+- (void)setFrame:(CGRect)frame
+{
+    DLOG(@"%@\n%@",NSStringFromCGRect(frame),FunctionCallerMessage());
+    
+    [super setFrame:frame];
+}
+
+@end
 
 @interface ViewController ()
 
@@ -24,9 +40,8 @@
     UITapGestureRecognizer *tapG = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap)];
     [self.view addGestureRecognizer:tapG];
     
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
-    
-#warning 这个应该找到更方便的用法
     self.view.shiftHeightAsDodgeViewForMLInputDodger = 50.0f;
     [self.view registerAsDodgeViewForMLInputDodger];
 }

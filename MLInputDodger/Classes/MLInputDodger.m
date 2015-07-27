@@ -9,14 +9,16 @@
 #import "MLInputDodger.h"
 #import <MLKit.h>
 
+const double kInputViewAnimationDuration = .25f;
+
 @interface MLInputDodger()
 
 @property (nonatomic, weak) UIView *firstResponderView;
 
 @property (nonatomic, strong) NSHashTable *dodgeViews;
 
-@property (nonatomic, assign) BOOL isInputViewShowing;
-@property (nonatomic, assign) double inputViewAnimationDuration;
+//因为显示输入View关联的最后一个焦点view
+@property (nonatomic, weak) UIView *lastFirstResponderViewForShowingInputView;
 @property (nonatomic, assign) CGRect inputViewFrame;
 @property (nonatomic, assign) NSInteger inputViewAnimationCurve;
 
@@ -41,7 +43,6 @@
 {
     self = [super init];
     if (self) {
-        self.inputViewAnimationDuration = .25f;
         self.inputViewAnimationCurve = 7;
         
         //add observer
@@ -75,23 +76,29 @@
 - (void)updateInputViewDetailWithKeyboardNotification:(NSNotification *)notification
 {
     NSDictionary *userInfo = [notification userInfo];
-    self.inputViewAnimationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     self.inputViewAnimationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     self.inputViewFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification
 {
-    self.isInputViewShowing = YES;
+    BOOL animated = YES;
+    if ([self.lastFirstResponderViewForShowingInputView isEqual:self.firstResponderView]) {
+        animated = NO;
+    }
+    
+    self.lastFirstResponderViewForShowingInputView = self.firstResponderView;
     [self updateInputViewDetailWithKeyboardNotification:notification];
-    [self doDodgeWithMustAnimated:NO];
+    
+    
+    [self doDodgeWithAnimated:animated];
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
-    self.isInputViewShowing = NO;
+    self.lastFirstResponderViewForShowingInputView = nil;
     [self updateInputViewDetailWithKeyboardNotification:notification];
-    [self doDodgeWithMustAnimated:NO];
+    [self doDodgeWithAnimated:YES];
 }
 
 
@@ -116,22 +123,16 @@
 /**
  *  执行闪避和恢复
  */
-- (void)doDodgeWithMustAnimated:(BOOL)mustAnimated
+- (void)doDodgeWithAnimated:(BOOL)animated
 {
-    DLOG(@"doDodgeWithMustAnimated:%d",mustAnimated);
-    DLOG(@"%@",FunctionCallerMessage());
-    
     UIView *dodgeView = [self currentDodgeView];
     if (!dodgeView) {
         return;
     }
     
-    double duration = self.inputViewAnimationDuration;
-    
-    
     CGFloat oldY = dodgeView.originalYAsDodgeViewForMLInputDodger;
     CGFloat newY = oldY;
-    if (self.isInputViewShowing) {
+    if (self.lastFirstResponderViewForShowingInputView) {
         CGFloat keyboardOrginY = self.inputViewFrame.origin.y;
         
         //找到必须要显示的位置
@@ -140,29 +141,35 @@
             shiftHeight = dodgeView.shiftHeightAsDodgeViewForMLInputDodger;
         }
         
-        CGFloat mustVisibleYForWindow = [self.firstResponderView convertPoint:CGPointMake(0, self.firstResponderView.frame.size.height) toView:nil].y+shiftHeight;
+        CGRect frameInWindow = [self.firstResponderView convertRect:self.firstResponderView.bounds toView:self.firstResponderView.window];
+        
+        CGFloat mustVisibleYForWindow = frameInWindow.origin.y+frameInWindow.size.height+shiftHeight;
         
         newY = MIN(oldY, keyboardOrginY - mustVisibleYForWindow + dodgeView.frameY);
         //保证不会往上移动过分了
         newY = MAX(newY, keyboardOrginY - dodgeView.frameHeight);
         //保证不会往下移动
         newY = MIN(newY, oldY);
+        if (newY==0&& [FunctionCallerMessage()[@"Method"] isEqualToString:@"keyboardWillShow"]) {
+            DLOG(@"异常");
+        }
     }
     
-    if (!mustAnimated&&duration==0) {
-        //这种时候不需要动画，否则效果会很差
+    DLOG(@"doDodgeWithMustAnimated:%d, newY:%f",animated,newY);
+    DLOG(@"%@",FunctionCallerMessage());
+    
+    if (animated) {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:kInputViewAnimationDuration];
+        [UIView setAnimationCurve:self.inputViewAnimationCurve];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        
         dodgeView.frameY = newY;
-        return;
+        
+        [UIView commitAnimations];
+    }else{
+        dodgeView.frameY = newY;
     }
-    
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:duration];
-    [UIView setAnimationCurve:self.inputViewAnimationCurve];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    
-    dodgeView.frameY = newY;
-    
-    [UIView commitAnimations];
 }
 
 #pragma mark - outcall
@@ -173,9 +180,15 @@
     }
     
     self.firstResponderView = view;
-    if (self.isInputViewShowing) {
-#warning 到这里的话不一定不会执行keyWillShow事件，也有可能执行，我们需要搞一搞，例如切换焦点的时候键盘也有改变
-        [self doDodgeWithMustAnimated:YES];
+    if (self.lastFirstResponderViewForShowingInputView) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+           //到下一个循环里，这时候检查是否当前因为keyboardWillShow事件已经处理了闪避，如果没这里就处理下
+            //这种情况是由于当键盘类型和frame没改变的情况下，UIKeyboardWillShowNotification不会触发
+            if (![self.lastFirstResponderViewForShowingInputView isEqual:self.firstResponderView]) {
+                self.lastFirstResponderViewForShowingInputView = self.firstResponderView;
+                [self doDodgeWithAnimated:YES];
+            }
+        });
     }
 }
 
