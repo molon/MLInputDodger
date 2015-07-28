@@ -77,7 +77,9 @@ static char originalYAsDodgeViewForMLInputDodgerKey;
 #pragma mark - outcall
 - (void)registerAsDodgeViewForMLInputDodger
 {
-    self.originalYAsDodgeViewForMLInputDodger = self.frameY;
+    if (self.originalYAsDodgeViewForMLInputDodger==0) {
+        self.originalYAsDodgeViewForMLInputDodger = self.frameY;
+    }
     [[MLInputDodger dodger]registerDodgeView:self];
 }
 

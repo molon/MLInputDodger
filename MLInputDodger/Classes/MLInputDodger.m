@@ -120,6 +120,78 @@ const double kInputViewAnimationDuration = .25f;
     return nil;
 }
 
+- (void)doDodgeWithAnimated:(BOOL)animated dodgeScrollView:(UIScrollView*)dodgeView
+{
+    if (!dodgeView) {
+        return;
+    }
+    
+    void(^dodgeBlock)(UIEdgeInsets,CGPoint,BOOL) = ^(UIEdgeInsets inset,CGPoint offset,BOOL forHide){
+        if (animated) {
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:kInputViewAnimationDuration];
+            [UIView setAnimationCurve:self.inputViewAnimationCurve];
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            
+            dodgeView.contentInset = inset;
+            if (!forHide){
+                [dodgeView setContentOffset:offset animated:NO];
+            }
+            
+            [UIView commitAnimations];
+        }else{
+            dodgeView.contentInset = inset;
+            if (!forHide){
+                [dodgeView setContentOffset:offset animated:NO];
+            }
+        }
+    };
+
+    
+    UIEdgeInsets inset = dodgeView.originalContentInsetAsDodgeViewForMLInputDodger;
+    CGPoint offset = dodgeView.contentOffset;
+    
+    //对于UIScrollView的话，我们不修改其frame，只修改其contentInset和offset吧。
+    if (self.lastFirstResponderViewForShowingInputView) {
+        CGFloat keyboardOrginY = self.inputViewFrame.origin.y;
+        
+        //找到必须要显示的位置
+        CGFloat shiftHeight = self.firstResponderView.shiftHeightAsFirstResponderForMLInputDodger;
+        if (shiftHeight==0) {
+            shiftHeight = dodgeView.shiftHeightAsDodgeViewForMLInputDodger;
+        }
+        
+        CGRect frameInDodgeView = [self.firstResponderView convertRect:self.firstResponderView.bounds toView:dodgeView];
+        
+        CGRect dodgeViewFrameInWindow = [dodgeView.superview convertRect:dodgeView.frame toView:dodgeView.window];
+        CGFloat dodgeViewFrameBottomInWindow = CGRectGetMaxY(dodgeViewFrameInWindow);
+        
+        inset.bottom += MAX(0,dodgeViewFrameBottomInWindow-keyboardOrginY);
+        
+        CGFloat mustDisplayHeight = self.firstResponderView.frameHeight+shiftHeight;
+        NSAssert(CGRectGetHeight(dodgeViewFrameInWindow)>=mustDisplayHeight+inset.top, @"对应的dodgeScrollView的高度不可太小");
+        NSAssert(keyboardOrginY-dodgeViewFrameInWindow.origin.y>mustDisplayHeight, @"对应的dodgeScrollView的Y位置太低");
+        
+        offset.y = frameInDodgeView.origin.y-inset.top-(MIN(keyboardOrginY,dodgeViewFrameBottomInWindow)-dodgeViewFrameInWindow.origin.y-mustDisplayHeight-inset.top);
+        offset.y = MAX(offset.y, -inset.top);
+        offset.y = MIN(offset.y, dodgeView.contentSize.height-CGRectGetHeight(dodgeViewFrameInWindow)+inset.bottom);
+        
+        id nextResponder = [dodgeView nextResponder];
+#warning 在iOS8下 左边当前是数字键盘，然后右边以文字键盘返回的话会出问题，直接返回的话会发现位置不对，交互返回的话键盘会消失了
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            //这个是为了解决导航器pop后 viewController.view 的frame会被transition重置
+            if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
+                [CHILD(UIViewController, nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                    dodgeBlock(inset,offset,self.lastFirstResponderViewForShowingInputView==nil);
+                }];
+                return;
+            }
+        }
+    }
+    
+    dodgeBlock(inset,offset,self.lastFirstResponderViewForShowingInputView==nil);
+}
+
 /**
  *  执行闪避和恢复
  */
@@ -130,8 +202,10 @@ const double kInputViewAnimationDuration = .25f;
         return;
     }
     
-    CGFloat oldY = dodgeView.originalYAsDodgeViewForMLInputDodger;
-    CGFloat newY = oldY;
+    if ([dodgeView isKindOfClass:[UIScrollView class]]) {
+        [self doDodgeWithAnimated:animated dodgeScrollView:CHILD(UIScrollView, dodgeView)];
+        return;
+    }
     
     void(^dodgeBlock)(CGFloat) = ^(CGFloat completeY){
         if (animated) {
@@ -149,6 +223,8 @@ const double kInputViewAnimationDuration = .25f;
     };
     
     
+    CGFloat oldY = dodgeView.originalYAsDodgeViewForMLInputDodger;
+    CGFloat newY = oldY;
     if (self.lastFirstResponderViewForShowingInputView) {
         CGFloat keyboardOrginY = self.inputViewFrame.origin.y;
         
@@ -163,9 +239,9 @@ const double kInputViewAnimationDuration = .25f;
         CGFloat mustVisibleYForWindow = frameInWindow.origin.y+frameInWindow.size.height+shiftHeight;
         
         newY = MIN(oldY, keyboardOrginY - mustVisibleYForWindow + dodgeView.frameY);
-        //保证不会往上移动过分了
+        //保证不会往上移动过分了，也就是尽量键盘和dodgeView的底部之间没缝隙
         newY = MAX(newY, keyboardOrginY - dodgeView.frameHeight);
-        //保证不会往下移动
+        //保证不会往下移动，在以上的处理后，这是最终需要考虑的。
         newY = MIN(newY, oldY);
         
         id nextResponder = [dodgeView nextResponder];

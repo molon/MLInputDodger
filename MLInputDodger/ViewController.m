@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "UIView+MLInputDodger.h"
 #import <MLKit/MLKit.h>
-
+#import "ListViewController.h"
 
 @interface TestView:UIView
 @end
@@ -18,7 +18,7 @@
 
 - (void)setFrame:(CGRect)frame
 {
-    DLOG(@"%@\n%@",NSStringFromCGRect(frame),FunctionCallerMessage());
+//    DLOG(@"%@\n%@",NSStringFromCGRect(frame),FunctionCallerMessage());
     
     [super setFrame:frame];
 }
@@ -54,6 +54,16 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
+- (IBAction)buttonPressed:(id)sender {
+    ListViewController *vc = [ListViewController new];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - event

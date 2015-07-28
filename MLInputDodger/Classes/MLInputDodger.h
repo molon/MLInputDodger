@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "UIView+MLInputDodger.h"
+#import "UIScrollView+MLInputDodger.h"
 
 @interface MLInputDodger : NSObject
 
