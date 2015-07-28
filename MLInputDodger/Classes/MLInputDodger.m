@@ -132,6 +132,23 @@ const double kInputViewAnimationDuration = .25f;
     
     CGFloat oldY = dodgeView.originalYAsDodgeViewForMLInputDodger;
     CGFloat newY = oldY;
+    
+    void(^dodgeBlock)(CGFloat) = ^(CGFloat completeY){
+        if (animated) {
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:kInputViewAnimationDuration];
+            [UIView setAnimationCurve:self.inputViewAnimationCurve];
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            
+            dodgeView.frameY = completeY;
+            
+            [UIView commitAnimations];
+        }else{
+            dodgeView.frameY = completeY;
+        }
+    };
+    
+    
     if (self.lastFirstResponderViewForShowingInputView) {
         CGFloat keyboardOrginY = self.inputViewFrame.origin.y;
         
@@ -150,26 +167,21 @@ const double kInputViewAnimationDuration = .25f;
         newY = MAX(newY, keyboardOrginY - dodgeView.frameHeight);
         //保证不会往下移动
         newY = MIN(newY, oldY);
-        if (newY==0&& [FunctionCallerMessage()[@"Method"] isEqualToString:@"keyboardWillShow"]) {
-            DLOG(@"异常");
+        
+        id nextResponder = [dodgeView nextResponder];
+#warning 在iOS8下 左边当前是数字键盘，然后右边以文字键盘返回的话会出问题，直接返回的话会发现位置不对，交互返回的话键盘会消失了
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            //这个是为了解决导航器pop后 viewController.view 的frame会被transition重置
+            if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
+                [CHILD(UIViewController, nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                    dodgeBlock(newY);
+                }];
+                return;
+            }
         }
     }
     
-    DLOG(@"doDodgeWithMustAnimated:%d, newY:%f",animated,newY);
-    DLOG(@"%@",FunctionCallerMessage());
-    
-    if (animated) {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:kInputViewAnimationDuration];
-        [UIView setAnimationCurve:self.inputViewAnimationCurve];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        
-        dodgeView.frameY = newY;
-        
-        [UIView commitAnimations];
-    }else{
-        dodgeView.frameY = newY;
-    }
+    dodgeBlock(newY);
 }
 
 #pragma mark - outcall

@@ -17,18 +17,18 @@ static char originalYAsDodgeViewForMLInputDodgerKey;
 
 @implementation UIView (MLInputDodger)
 
-- (BOOL)hook_becomeFirstResponder
+- (BOOL)__MLInputDodger_hook_becomeFirstResponder
 {
     if ([self canBecomeFirstResponder]) {
         [[MLInputDodger dodger] firstResponderViewChangeTo:self];
     }
     
-    return [self hook_becomeFirstResponder];
+    return [self __MLInputDodger_hook_becomeFirstResponder];
 }
 
 + (void)load
 {
-    Swizzle([self class], @selector(becomeFirstResponder), @selector(hook_becomeFirstResponder));
+    Swizzle([self class], @selector(becomeFirstResponder), @selector(__MLInputDodger_hook_becomeFirstResponder));
 }
 
 - (CGFloat)shiftHeightAsDodgeViewForMLInputDodger
