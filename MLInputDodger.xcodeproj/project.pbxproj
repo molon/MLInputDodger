@@ -18,6 +18,8 @@
 		360F924C1B65D11D00A6F9F4 /* MLInputDodger.m in Sources */ = {isa = PBXBuildFile; fileRef = 360F924B1B65D11D00A6F9F4 /* MLInputDodger.m */; };
 		360F92521B6747D500A6F9F4 /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 360F92511B6747D500A6F9F4 /* ListViewController.m */; };
 		360F92551B674E9400A6F9F4 /* UIScrollView+MLInputDodger.m in Sources */ = {isa = PBXBuildFile; fileRef = 360F92541B674E9400A6F9F4 /* UIScrollView+MLInputDodger.m */; };
+		360F925C1B6782FB00A6F9F4 /* MLInputDodgerRetractView.m in Sources */ = {isa = PBXBuildFile; fileRef = 360F925B1B6782FB00A6F9F4 /* MLInputDodgerRetractView.m */; };
+		368D7D971B678CC700200861 /* MLInputDodger.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 368D7D961B678CC700200861 /* MLInputDodger.bundle */; };
 		36E996DEF95BB1C72F73D7F0 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B846FD30C3C7D8134CF5C6A /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +57,9 @@
 		360F92511B6747D500A6F9F4 /* ListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewController.m; sourceTree = "<group>"; };
 		360F92531B674E9400A6F9F4 /* UIScrollView+MLInputDodger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+MLInputDodger.h"; sourceTree = "<group>"; };
 		360F92541B674E9400A6F9F4 /* UIScrollView+MLInputDodger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+MLInputDodger.m"; sourceTree = "<group>"; };
+		360F925A1B6782FB00A6F9F4 /* MLInputDodgerRetractView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLInputDodgerRetractView.h; sourceTree = "<group>"; };
+		360F925B1B6782FB00A6F9F4 /* MLInputDodgerRetractView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLInputDodgerRetractView.m; sourceTree = "<group>"; };
+		368D7D961B678CC700200861 /* MLInputDodger.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MLInputDodger.bundle; sourceTree = "<group>"; };
 		7045DECD382026584C71989F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -153,12 +158,15 @@
 		360F92461B65C83500A6F9F4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				368D7D961B678CC700200861 /* MLInputDodger.bundle */,
 				360F92471B65D0F100A6F9F4 /* UIView+MLInputDodger.h */,
 				360F92481B65D0F100A6F9F4 /* UIView+MLInputDodger.m */,
 				360F92531B674E9400A6F9F4 /* UIScrollView+MLInputDodger.h */,
 				360F92541B674E9400A6F9F4 /* UIScrollView+MLInputDodger.m */,
 				360F924A1B65D11D00A6F9F4 /* MLInputDodger.h */,
 				360F924B1B65D11D00A6F9F4 /* MLInputDodger.m */,
+				360F925A1B6782FB00A6F9F4 /* MLInputDodgerRetractView.h */,
+				360F925B1B6782FB00A6F9F4 /* MLInputDodgerRetractView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -253,6 +261,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				368D7D971B678CC700200861 /* MLInputDodger.bundle in Resources */,
 				360F922C1B65C6CD00A6F9F4 /* Main.storyboard in Resources */,
 				360F92311B65C6CD00A6F9F4 /* LaunchScreen.xib in Resources */,
 				360F922E1B65C6CD00A6F9F4 /* Images.xcassets in Resources */,
@@ -309,6 +318,7 @@
 				360F92291B65C6CD00A6F9F4 /* ViewController.m in Sources */,
 				360F92261B65C6CD00A6F9F4 /* AppDelegate.m in Sources */,
 				360F92521B6747D500A6F9F4 /* ListViewController.m in Sources */,
+				360F925C1B6782FB00A6F9F4 /* MLInputDodgerRetractView.m in Sources */,
 				360F92231B65C6CD00A6F9F4 /* main.m in Sources */,
 				360F92491B65D0F100A6F9F4 /* UIView+MLInputDodger.m in Sources */,
 				360F92551B674E9400A6F9F4 /* UIScrollView+MLInputDodger.m in Sources */,

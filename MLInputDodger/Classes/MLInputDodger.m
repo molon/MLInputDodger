@@ -8,6 +8,7 @@
 
 #import "MLInputDodger.h"
 #import <MLKit.h>
+#import "MLInputDodgerRetractView.h"
 
 const double kInputViewAnimationDuration = .25f;
 
@@ -21,6 +22,8 @@ const double kInputViewAnimationDuration = .25f;
 @property (nonatomic, weak) UIView *lastFirstResponderViewForShowingInputView;
 @property (nonatomic, assign) CGRect inputViewFrame;
 @property (nonatomic, assign) NSInteger inputViewAnimationCurve;
+
+@property (nonatomic, strong) MLInputDodgerRetractView *retractInputAccessoryView;
 
 @end
 
@@ -70,6 +73,33 @@ const double kInputViewAnimationDuration = .25f;
         _dodgeViews = [NSHashTable weakObjectsHashTable];
     }
     return _dodgeViews;
+}
+
+- (MLInputDodgerRetractView *)retractInputAccessoryView
+{
+    if (!_retractInputAccessoryView) {
+        _retractInputAccessoryView = [MLInputDodgerRetractView new];
+        WEAKSELF
+        [_retractInputAccessoryView setDidClickRetractButtonBlock:^{
+           STRONGSELF
+            [sSelf.firstResponderView resignFirstResponder];
+        }];
+    }
+    return _retractInputAccessoryView;
+}
+
+#pragma mark - setter
+- (void)setFirstResponderView:(UIView *)firstResponderView
+{
+    _firstResponderView = firstResponderView;
+    
+    if (!firstResponderView.inputAccessoryView) {
+        UIView *dodgeView = [self currentDodgeView];
+        if (dodgeView) {
+            self.retractInputAccessoryView.frame = CGRectMake(0, 0, SCREEN_WIDTH, kMLInputDodgerRetractViewDefaultHeight);
+            [firstResponderView performSelector:@selector(setInputAccessoryView:) withObject:self.retractInputAccessoryView];
+        }
+    }
 }
 
 #pragma mark - notification
@@ -154,6 +184,10 @@ const double kInputViewAnimationDuration = .25f;
     //对于UIScrollView的话，我们不修改其frame，只修改其contentInset和offset吧。
     if (self.lastFirstResponderViewForShowingInputView) {
         CGFloat keyboardOrginY = self.inputViewFrame.origin.y;
+        //如果inputAccessoryView是我们的收起键盘的按钮就忽略它的高度
+        if ([self.firstResponderView.inputAccessoryView isEqual:self.retractInputAccessoryView]) {
+            keyboardOrginY+= self.retractInputAccessoryView.frameHeight;
+        }
         
         //找到必须要显示的位置
         CGFloat shiftHeight = self.firstResponderView.shiftHeightAsFirstResponderForMLInputDodger;
@@ -227,6 +261,10 @@ const double kInputViewAnimationDuration = .25f;
     CGFloat newY = oldY;
     if (self.lastFirstResponderViewForShowingInputView) {
         CGFloat keyboardOrginY = self.inputViewFrame.origin.y;
+        //如果inputAccessoryView是我们的收起键盘的按钮就忽略它的高度
+        if ([self.firstResponderView.inputAccessoryView isEqual:self.retractInputAccessoryView]) {
+            keyboardOrginY+= self.retractInputAccessoryView.frameHeight;
+        }
         
         //找到必须要显示的位置
         CGFloat shiftHeight = self.firstResponderView.shiftHeightAsFirstResponderForMLInputDodger;

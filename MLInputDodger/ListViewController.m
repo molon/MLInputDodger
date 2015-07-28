@@ -38,10 +38,11 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.tableView];
     
-    self.automaticallyAdjustsScrollViewInsets = NO;
     
     UITapGestureRecognizer *tapG = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap)];
     [self.view addGestureRecognizer:tapG];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"test" style:UIBarButtonItemStylePlain target:self action:@selector(testPush)];
     
 }
 
@@ -62,7 +63,11 @@
 {
     [self.view endEditing:YES];
 }
-
+- (void)testPush
+{
+    ListViewController *vc = [ListViewController new];
+    [self.navigationController pushViewController:vc animated:YES];
+}
 #pragma mark - getter
 - (UITableView *)tableView
 {
