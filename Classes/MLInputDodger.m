@@ -94,6 +94,10 @@ const double kInputViewAnimationDuration = .25f;
 #pragma mark - setter
 - (void)setFirstResponderView:(UIView *)firstResponderView
 {
+    if ([_firstResponderView.inputAccessoryView isEqual:self.retractInputAccessoryView]) {
+        [_firstResponderView performSelector:@selector(setInputAccessoryView:) withObject:nil];
+    }
+    
     _firstResponderView = firstResponderView;
     
     if (!firstResponderView.inputAccessoryView) {
