@@ -1,0 +1,43 @@
+{
+  "name": "MLKit",
+  "version": "1.0.1",
+  "summary": "MLKit",
+  "homepage": "https://github.com/molon/MLKit",
+  "license": {
+    "type": "MIT"
+  },
+  "authors": {
+    "molon": "dudl@qq.com"
+  },
+  "source": {
+    "git": "https://github.com/molon/MLKit.git",
+    "tag": "1.0.1"
+  },
+  "platforms": {
+    "ios": "7.0"
+  },
+  "public_header_files": "Classes/**/*.h",
+  "source_files": "Classes/**/*.{h,m}",
+  "frameworks": [
+    "MobileCoreServices",
+    "AVFoundation",
+    "SystemConfiguration"
+  ],
+  "resources": "Classes/**/*.bundle",
+  "requires_arc": true,
+  "prefix_header_contents": "#import \"MLKitDebug.h\"",
+  "dependencies": {
+    "SDWebImage": [
+      "~> 3.7.3"
+    ],
+    "MBProgressHUD": [
+      "~> 0.9.1"
+    ],
+    "AFNetworking": [
+      "~>2.5.4"
+    ],
+    "SSKeychain": [
+      "~> 1.2.3"
+    ]
+  }
+}
