@@ -30,10 +30,10 @@ static char originalContentInsetAsDodgeViewForMLInputDodgerKey;
 
 - (void)registerAsDodgeViewForMLInputDodger
 {
-    [super registerAsDodgeViewForMLInputDodger];
     if (UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsetsZero, self.originalContentInsetAsDodgeViewForMLInputDodger)) {
         self.originalContentInsetAsDodgeViewForMLInputDodger = self.contentInset;
     }
+    [super registerAsDodgeViewForMLInputDodger];
 }
 
 @end

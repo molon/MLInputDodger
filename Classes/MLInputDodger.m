@@ -214,8 +214,8 @@ const double kInputViewAnimationDuration = .25f;
         NSAssert(keyboardOrginY-dodgeViewFrameInWindow.origin.y>mustDisplayHeight, @"对应的dodgeScrollView的Y位置太低");
         
         offset.y = frameInDodgeView.origin.y-inset.top-(MIN(keyboardOrginY,dodgeViewFrameBottomInWindow)-dodgeViewFrameInWindow.origin.y-mustDisplayHeight-inset.top);
-        offset.y = MAX(offset.y, -inset.top);
         offset.y = MIN(offset.y, dodgeView.contentSize.height-CGRectGetHeight(dodgeViewFrameInWindow)+inset.bottom);
+        offset.y = MAX(offset.y, -inset.top);
         
         id nextResponder = [dodgeView nextResponder];
 #warning 在iOS8下 左边当前是数字键盘，然后右边以文字键盘返回的话会出问题，直接返回的话会发现位置不对，交互返回的话键盘会消失了
