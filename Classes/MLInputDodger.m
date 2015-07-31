@@ -210,15 +210,15 @@ const double kInputViewAnimationDuration = .25f;
         inset.bottom += MAX(0,dodgeViewFrameBottomInWindow-keyboardOrginY);
         
         CGFloat mustDisplayHeight = CGRectGetHeight(self.firstResponderView.frame)+shiftHeight;
-        NSAssert(CGRectGetHeight(dodgeViewFrameInWindow)>=mustDisplayHeight+inset.top, @"对应的dodgeScrollView的高度不可太小");
-        NSAssert(keyboardOrginY-dodgeViewFrameInWindow.origin.y>mustDisplayHeight, @"对应的dodgeScrollView的Y位置太低");
+        NSAssert(CGRectGetHeight(dodgeViewFrameInWindow)>=mustDisplayHeight+inset.top, @"对应的dodgeScrollView的高度不可太小或者shiftHeight太大");
+        NSAssert(keyboardOrginY-dodgeViewFrameInWindow.origin.y>=mustDisplayHeight+inset.top, @"对应的dodgeScrollView的Y位置太低或者shiftHeight太大");
         
         offset.y = frameInDodgeView.origin.y-inset.top-(MIN(keyboardOrginY,dodgeViewFrameBottomInWindow)-dodgeViewFrameInWindow.origin.y-mustDisplayHeight-inset.top);
         offset.y = MIN(offset.y, dodgeView.contentSize.height-CGRectGetHeight(dodgeViewFrameInWindow)+inset.bottom);
         offset.y = MAX(offset.y, -inset.top);
         
         id nextResponder = [dodgeView nextResponder];
-#warning 在iOS8下 左边当前是数字键盘，然后右边以文字键盘返回的话会出问题，直接返回的话会发现位置不对，交互返回的话键盘会消失了
+#warning 在iOS8下 左边当前是数字键盘，然后右边以文字键盘返回的话会出问题，直接返回的话会发现位置不对，交互返回的话键盘会消失了, 还需要研究，真机没测
         if ([nextResponder isKindOfClass:[UIViewController class]]) {
             //这个是为了解决导航器pop后 viewController.view 的frame会被transition重置
             if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
@@ -292,7 +292,7 @@ const double kInputViewAnimationDuration = .25f;
         newY = MIN(newY, oldY);
         
         id nextResponder = [dodgeView nextResponder];
-#warning 在iOS8下 左边当前是数字键盘，然后右边以文字键盘返回的话会出问题，直接返回的话会发现位置不对，交互返回的话键盘会消失了
+#warning 在iOS8下 左边当前是数字键盘，然后右边以文字键盘返回的话会出问题，直接返回的话会发现位置不对，交互返回的话键盘会消失了, 还需要研究，真机没测
         if ([nextResponder isKindOfClass:[UIViewController class]]) {
             //这个是为了解决导航器pop后 viewController.view 的frame会被transition重置
             if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
