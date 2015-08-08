@@ -103,8 +103,10 @@ void MLInputDodger_Swizzle(Class c, SEL origSEL, SEL newSEL)
 #pragma mark - outcall
 - (void)registerAsDodgeViewForMLInputDodger
 {
-    if (self.originalYAsDodgeViewForMLInputDodger==0) {
-        self.originalYAsDodgeViewForMLInputDodger = self.frame.origin.y;
+    if (![[MLInputDodger dodger] isRegisteredForDodgeView:self]) {
+        if (self.originalYAsDodgeViewForMLInputDodger==0) {
+            self.originalYAsDodgeViewForMLInputDodger = self.frame.origin.y;
+        }
     }
     [[MLInputDodger dodger]registerDodgeView:self];
 }

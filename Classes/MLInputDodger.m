@@ -330,7 +330,7 @@ const double kInputViewAnimationDuration = .25f;
 
 - (void)registerDodgeView:(UIView*)dodgeView
 {
-    if (![self.dodgeViews containsObject:dodgeView]) {
+    if (![self isRegisteredForDodgeView:dodgeView]) {
         [self.dodgeViews addObject:dodgeView];
     }
 }
@@ -340,4 +340,8 @@ const double kInputViewAnimationDuration = .25f;
     [self.dodgeViews removeObject:dodgeView];
 }
 
+- (BOOL)isRegisteredForDodgeView:(UIView*)dodgeView
+{
+    return [self.dodgeViews containsObject:dodgeView];
+}
 @end

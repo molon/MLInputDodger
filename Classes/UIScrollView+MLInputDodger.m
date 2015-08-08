@@ -9,6 +9,7 @@
 #import "UIScrollView+MLInputDodger.h"
 #import <objc/runtime.h>
 #import "UIView+MLInputDodger.h"
+#import "MLInputDodger.h"
 
 static char originalContentInsetAsDodgeViewForMLInputDodgerKey;
 
@@ -30,8 +31,10 @@ static char originalContentInsetAsDodgeViewForMLInputDodgerKey;
 
 - (void)registerAsDodgeViewForMLInputDodger
 {
-    if (UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsetsZero, self.originalContentInsetAsDodgeViewForMLInputDodger)) {
-        self.originalContentInsetAsDodgeViewForMLInputDodger = self.contentInset;
+    if (![[MLInputDodger dodger] isRegisteredForDodgeView:self]) {
+        if (UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsetsZero, self.originalContentInsetAsDodgeViewForMLInputDodger)) {
+            self.originalContentInsetAsDodgeViewForMLInputDodger = self.contentInset;
+        }
     }
     [super registerAsDodgeViewForMLInputDodger];
 }

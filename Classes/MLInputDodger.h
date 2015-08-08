@@ -17,6 +17,11 @@
 @property (readonly, nonatomic, weak) UIView *firstResponderView;
 
 /**
+ *  可以检测是否已经被注册
+ */
+- (BOOL)isRegisteredForDodgeView:(UIView*)dodgeView;
+
+/**
  *  注册闪避View，即为需要根据输入状态改变位置的view
  */
 - (void)registerDodgeView:(UIView*)dodgeView;
