@@ -214,8 +214,9 @@ const double kInputViewAnimationDuration = .25f;
         inset.bottom += MAX(0,dodgeViewFrameBottomInWindow-keyboardOrginY);
         
         CGFloat mustDisplayHeight = CGRectGetHeight(self.firstResponderView.frame)+shiftHeight;
-        NSAssert(CGRectGetHeight(dodgeViewFrameInWindow)>=mustDisplayHeight+inset.top, @"对应的dodgeScrollView的高度不可太小或者shiftHeight太大");
-        NSAssert(keyboardOrginY-dodgeViewFrameInWindow.origin.y>=mustDisplayHeight+inset.top, @"对应的dodgeScrollView的Y位置太低或者shiftHeight太大");
+        //此断言暂时不需要了,如果出现问题也是非常极端的瞎鸡巴用的人
+//        NSAssert(CGRectGetHeight(dodgeViewFrameInWindow)>=mustDisplayHeight+inset.top, @"对应的dodgeScrollView的高度不可太小或者shiftHeight太大");
+//        NSAssert(keyboardOrginY-dodgeViewFrameInWindow.origin.y>=mustDisplayHeight+inset.top, @"对应的dodgeScrollView的Y位置太低或者shiftHeight太大");
         
         offset.y = frameInDodgeView.origin.y-inset.top-(MIN(keyboardOrginY,dodgeViewFrameBottomInWindow)-dodgeViewFrameInWindow.origin.y-mustDisplayHeight-inset.top);
         offset.y = MIN(offset.y, dodgeView.contentSize.height-CGRectGetHeight(dodgeViewFrameInWindow)+inset.bottom);
