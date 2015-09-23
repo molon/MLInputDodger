@@ -30,7 +30,7 @@
 {
     if (!_button) {
         UIButton *button = [[UIButton alloc]init];
-        [button setImage:[UIImage imageNamed:[@"MLInputDodger.bundle" stringByAppendingPathComponent:@"收起键盘"]] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:[@"MLInputDodger.bundle" stringByAppendingPathComponent:@"retract"]] forState:UIControlStateNormal];
         [button addTarget:self action:@selector(retract) forControlEvents:UIControlEventTouchUpInside];
         
         button.layer.cornerRadius = 5.0f;
@@ -69,7 +69,7 @@
     BOOL result = [super pointInside:point withEvent:event];
     
     if (result) {
-        //除去按钮位置，其他都是可穿透的
+        //penetrable except button
         if (!CGRectContainsPoint(self.button.frame, point)) {
             return NO;
         }

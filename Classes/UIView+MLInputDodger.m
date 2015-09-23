@@ -14,14 +14,14 @@ static char shiftHeightAsDodgeViewForMLInputDodgerKey;
 static char shiftHeightAsFirstResponderForMLInputDodgerKey;
 static char originalYAsDodgeViewForMLInputDodgerKey;
 
-//静态就交换静态，实例方法就交换实例方法
+/**
+ *  swizzle method
+ */
 void MLInputDodger_Swizzle(Class c, SEL origSEL, SEL newSEL)
 {
-    //获取实例方法
     Method origMethod = class_getInstanceMethod(c, origSEL);
     Method newMethod = nil;
     if (!origMethod) {
-        //获取静态方法
         origMethod = class_getClassMethod(c, origSEL);
         newMethod = class_getClassMethod(c, newSEL);
     }else{
@@ -32,9 +32,7 @@ void MLInputDodger_Swizzle(Class c, SEL origSEL, SEL newSEL)
         return;
     }
     
-    //自身已经有了就添加不成功，直接交换即可
     if(class_addMethod(c, origSEL, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))){
-        //添加成功一般情况是因为，origSEL本身是在c的父类里。这里添加成功了一个继承方法。
         class_replaceMethod(c, newSEL, method_getImplementation(origMethod), method_getTypeEncoding(origMethod));
     }else{
         method_exchangeImplementations(origMethod, newMethod);
@@ -54,6 +52,7 @@ void MLInputDodger_Swizzle(Class c, SEL origSEL, SEL newSEL)
 
 + (void)load
 {
+    //hook become first responder
     MLInputDodger_Swizzle([self class], @selector(becomeFirstResponder), @selector(__MLInputDodger_hook_becomeFirstResponder));
 }
 

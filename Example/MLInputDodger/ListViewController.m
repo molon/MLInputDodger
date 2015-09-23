@@ -40,7 +40,9 @@
 {
     [super viewDidAppear:animated];
     
-    //放到这里是因为self.automaticallyAdjustsScrollViewInsets==YES，这里的tableView的contentInset比较合适
+    //because `self.automaticallyAdjustsScrollViewInsets==YES` , the contentInset have be set now.
+    //when `registerAsDodgeViewForMLInputDodger`,the`originalContentInsetAsDodgeViewForMLInputDodger` would be
+    //set with the current cotentInset
     self.tableView.shiftHeightAsDodgeViewForMLInputDodger = 44.0f+5.0f;
     [self.tableView registerAsDodgeViewForMLInputDodger];
 }

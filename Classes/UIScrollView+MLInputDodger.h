@@ -11,7 +11,7 @@
 @interface UIScrollView (MLInputDodger)
 
 /**
- *  作为dodgeView时候的原contentInset位置，在registerAsDodgeView时候如果发现此值为Zero的话会设置此值为当前的
+ *  The config of original contentInset. When `registerAsDodgeViewForMLInputDodger`, if value of the property is `UIEdgeInsetsZero`, it's will be set with current contentInset
  */
 @property (nonatomic, assign) UIEdgeInsets originalContentInsetAsDodgeViewForMLInputDodger;
 

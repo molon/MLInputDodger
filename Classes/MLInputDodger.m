@@ -17,15 +17,26 @@ const double kInputViewAnimationDuration = .25f;
 
 @interface MLInputDodger()
 
+/**
+ *  Current first responder view
+ */
 @property (nonatomic, weak) UIView *firstResponderView;
 
+/**
+ *  Views can be dodged
+ */
 @property (nonatomic, strong) NSHashTable *dodgeViews;
 
-//因为显示输入View关联的最后一个焦点view
-@property (nonatomic, weak) UIView *lastFirstResponderViewForShowingInputView;
+/**
+ *  First responder view record because the last show of input view(keyboard)
+ */
+@property (nonatomic, weak) UIView *lastFirstResponderViewForShowInputView;
 @property (nonatomic, assign) CGRect inputViewFrame;
 @property (nonatomic, assign) NSInteger inputViewAnimationCurve;
 
+/**
+ *  Common input accessory view who can hide input view
+ */
 @property (nonatomic, strong) MLInputDodgerRetractView *retractInputAccessoryView;
 
 @end
@@ -35,14 +46,13 @@ const double kInputViewAnimationDuration = .25f;
 + (instancetype)dodger
 {
     static id _dodger = nil;
-    static dispatch_once_t oncePredicate;
-    dispatch_once(&oncePredicate, ^{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         _dodger = [[[self class] alloc] init];
     });
     
     return _dodger;
 }
-
 
 #pragma mark - life cycle
 - (instancetype)init
@@ -94,16 +104,19 @@ const double kInputViewAnimationDuration = .25f;
 #pragma mark - setter
 - (void)setFirstResponderView:(UIView *)firstResponderView
 {
+    //In iOS7，UIActionSheet can be first responder view，we need ignore it.
     if ([firstResponderView isKindOfClass:[UIActionSheet class]]) {
         return;
     }
     
+    //remove the common input accessory view who can hide input view
     if ([_firstResponderView.inputAccessoryView isEqual:self.retractInputAccessoryView]) {
         [_firstResponderView performSelector:@selector(setInputAccessoryView:) withObject:nil];
     }
     
     _firstResponderView = firstResponderView;
     
+    //if no, add the common input accessory view who can hide input view
     if (!firstResponderView.inputAccessoryView) {
         UIView *dodgeView = [self currentDodgeView];
         if (dodgeView) {
@@ -111,6 +124,50 @@ const double kInputViewAnimationDuration = .25f;
             [firstResponderView performSelector:@selector(setInputAccessoryView:) withObject:self.retractInputAccessoryView];
         }
     }
+}
+
+#pragma mark - outcall
+- (void)firstResponderViewChangeTo:(UIView*)view
+{
+    NSAssert(view, @"firstResponderView cannot be changed to nil");
+    if ([self.firstResponderView isEqual:view]) {
+        return;
+    }
+    
+    self.firstResponderView = view;
+    
+    /*
+     In iOS7,
+     When the input view is already display, the first responder change to another , but the keyboard type and frame wouldn't be changed.
+     Then `UIKeyboardWillShowNotification` notification will not be posted.
+     So we check it in next runloop and do something.
+     */
+    if (self.lastFirstResponderViewForShowInputView) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (![self.lastFirstResponderViewForShowInputView isEqual:self.firstResponderView]) {
+                self.lastFirstResponderViewForShowInputView = self.firstResponderView;
+                [self doDodgeWithAnimated:YES];
+            }
+        });
+    }
+}
+
+
+- (void)registerDodgeView:(UIView*)dodgeView
+{
+    if (![self isRegisteredForDodgeView:dodgeView]) {
+        [self.dodgeViews addObject:dodgeView];
+    }
+}
+
+- (void)unregisterDodgeView:(UIView*)dodgeView
+{
+    [self.dodgeViews removeObject:dodgeView];
+}
+
+- (BOOL)isRegisteredForDodgeView:(UIView*)dodgeView
+{
+    return [self.dodgeViews containsObject:dodgeView];
 }
 
 #pragma mark - notification
@@ -124,26 +181,28 @@ const double kInputViewAnimationDuration = .25f;
 - (void)keyboardWillShow:(NSNotification *)notification
 {
     BOOL animated = YES;
-    if ([self.lastFirstResponderViewForShowingInputView isEqual:self.firstResponderView]) {
+    if ([self.lastFirstResponderViewForShowInputView isEqual:self.firstResponderView]) {
         animated = NO;
     }
     
-    self.lastFirstResponderViewForShowingInputView = self.firstResponderView;
+    self.lastFirstResponderViewForShowInputView = self.firstResponderView;
+    
     [self updateInputViewDetailWithKeyboardNotification:notification];
-    
-    
     [self doDodgeWithAnimated:animated];
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
-    self.lastFirstResponderViewForShowingInputView = nil;
+    self.lastFirstResponderViewForShowInputView = nil;
+    
     [self updateInputViewDetailWithKeyboardNotification:notification];
     [self doDodgeWithAnimated:YES];
 }
 
 #pragma mark - helper
-//根据当前的firstResponder找到对应的闪避view
+/**
+ *  Get the dodger view of current first responder view
+ */
 - (UIView*)currentDodgeView
 {
     if (!self.firstResponderView) {
@@ -160,6 +219,10 @@ const double kInputViewAnimationDuration = .25f;
     return nil;
 }
 
+/**
+ *  If the dodger view is child of `UIScrollView`
+ *  We will not change it's frame, replace with changing `contentOffset` and `contentInset`
+ */
 - (void)doDodgeWithAnimated:(BOOL)animated dodgeScrollView:(UIScrollView*)dodgeView
 {
     if (!dodgeView) {
@@ -191,15 +254,16 @@ const double kInputViewAnimationDuration = .25f;
     UIEdgeInsets inset = dodgeView.originalContentInsetAsDodgeViewForMLInputDodger;
     CGPoint offset = dodgeView.contentOffset;
     
-    //对于UIScrollView的话，我们不修改其frame，只修改其contentInset和offset吧。
-    if (self.lastFirstResponderViewForShowingInputView) {
+    //If do dodge for display
+    if (self.lastFirstResponderViewForShowInputView) {
         CGFloat keyboardOrginY = self.inputViewFrame.origin.y;
-        //如果inputAccessoryView是我们的收起键盘的按钮就忽略它的高度
+        //If the input accessory view is common retract view, we ignore it's height
+        //Because it's a little button, this is more appropriate
         if ([self.firstResponderView.inputAccessoryView isEqual:self.retractInputAccessoryView]) {
             keyboardOrginY+= CGRectGetHeight(self.retractInputAccessoryView.frame);
         }
         
-        //找到必须要显示的位置
+        //Find the position which must be display
         CGFloat shiftHeight = self.firstResponderView.shiftHeightAsFirstResponderForMLInputDodger;
         if (shiftHeight==0) {
             shiftHeight = dodgeView.shiftHeightAsDodgeViewForMLInputDodger;
@@ -213,9 +277,9 @@ const double kInputViewAnimationDuration = .25f;
         inset.bottom += MAX(0,dodgeViewFrameBottomInWindow-keyboardOrginY);
         
         CGFloat mustDisplayHeight = CGRectGetHeight(self.firstResponderView.frame)+shiftHeight;
-        //此断言暂时不需要了,如果出现问题也是非常极端的瞎鸡巴用的人
-//        NSAssert(CGRectGetHeight(dodgeViewFrameInWindow)>=mustDisplayHeight+inset.top, @"对应的dodgeScrollView的高度不可太小或者shiftHeight太大");
-//        NSAssert(keyboardOrginY-dodgeViewFrameInWindow.origin.y>=mustDisplayHeight+inset.top, @"对应的dodgeScrollView的Y位置太低或者shiftHeight太大");
+        //the assert is not needed, if you use the library normally.
+//        NSAssert(CGRectGetHeight(dodgeViewFrameInWindow)>=mustDisplayHeight+inset.top, @"the height of dodgeScrollView cannot be too small or shift height cannot be too large");
+//        NSAssert(keyboardOrginY-dodgeViewFrameInWindow.origin.y>=mustDisplayHeight+inset.top, @"the y of dodgeScrollView cannot too low or shift height cannot be too large");
         
         offset.y = frameInDodgeView.origin.y-inset.top-(MIN(keyboardOrginY,dodgeViewFrameBottomInWindow)-dodgeViewFrameInWindow.origin.y-mustDisplayHeight-inset.top);
         offset.y = MIN(offset.y, dodgeView.contentSize.height-CGRectGetHeight(dodgeViewFrameInWindow)+inset.bottom);
@@ -223,21 +287,22 @@ const double kInputViewAnimationDuration = .25f;
         
         id nextResponder = [dodgeView nextResponder];
         if ([nextResponder isKindOfClass:[UIViewController class]]) {
-            //这个是为了解决导航器pop后 viewController.view 的frame会被transition重置
+            //after pop viewcontroller,the viewcontroller's frame will be reset.
+            //so we detect it, and dodge again
             if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
                 [CHILD(UIViewController, nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                    dodgeBlock(inset,offset,self.lastFirstResponderViewForShowingInputView==nil);
+                    dodgeBlock(inset,offset,self.lastFirstResponderViewForShowInputView==nil);
                 }];
                 return;
             }
         }
     }
     
-    dodgeBlock(inset,offset,self.lastFirstResponderViewForShowingInputView==nil);
+    dodgeBlock(inset,offset,self.lastFirstResponderViewForShowInputView==nil);
 }
 
 /**
- *  执行闪避和恢复
+ *  do dodge with common view, change it's frame
  */
 - (void)doDodgeWithAnimated:(BOOL)animated
 {
@@ -271,14 +336,15 @@ const double kInputViewAnimationDuration = .25f;
     
     CGFloat oldY = dodgeView.originalYAsDodgeViewForMLInputDodger;
     CGFloat newY = oldY;
-    if (self.lastFirstResponderViewForShowingInputView) {
+    if (self.lastFirstResponderViewForShowInputView) {
         CGFloat keyboardOrginY = self.inputViewFrame.origin.y;
-        //如果inputAccessoryView是我们的收起键盘的按钮就忽略它的高度
+        //If the input accessory view is common retract view, we ignore it's height
+        //Because it's a little button, this is more appropriate
         if ([self.firstResponderView.inputAccessoryView isEqual:self.retractInputAccessoryView]) {
             keyboardOrginY+= CGRectGetHeight(self.retractInputAccessoryView.frame);
         }
         
-        //找到必须要显示的位置
+        //Find the position which must be display
         CGFloat shiftHeight = self.firstResponderView.shiftHeightAsFirstResponderForMLInputDodger;
         if (shiftHeight==0) {
             shiftHeight = dodgeView.shiftHeightAsDodgeViewForMLInputDodger;
@@ -289,14 +355,15 @@ const double kInputViewAnimationDuration = .25f;
         CGFloat mustVisibleYForWindow = frameInWindow.origin.y+frameInWindow.size.height+shiftHeight;
         
         newY = MIN(oldY, keyboardOrginY - mustVisibleYForWindow + dodgeView.frame.origin.y);
-        //保证不会往上移动过分了，也就是尽量键盘和dodgeView的底部之间没缝隙
+        //ensure that the view will not move up devilishly
         newY = MAX(newY, keyboardOrginY - CGRectGetHeight(dodgeView.frame));
-        //保证不会往下移动，在以上的处理后，这是最终需要考虑的。
+        //ensure that the view will not move down
         newY = MIN(newY, oldY);
         
         id nextResponder = [dodgeView nextResponder];
         if ([nextResponder isKindOfClass:[UIViewController class]]) {
-            //这个是为了解决导航器pop后 viewController.view 的frame会被transition重置
+            //after pop viewcontroller,the viewcontroller's frame will be reset.
+            //so we detect it, and dodge again
             if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
                 [CHILD(UIViewController, nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
                     dodgeBlock(newY);
@@ -309,41 +376,4 @@ const double kInputViewAnimationDuration = .25f;
     dodgeBlock(newY);
 }
 
-#pragma mark - outcall
-- (void)firstResponderViewChangeTo:(UIView*)view
-{
-    if ([self.firstResponderView isEqual:view]) {
-        return;
-    }
-    
-    self.firstResponderView = view;
-    if (self.lastFirstResponderViewForShowingInputView) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-           //到下一个循环里，这时候检查是否当前因为keyboardWillShow事件已经处理了闪避，如果没这里就处理下
-            //这种情况是由于当键盘类型和frame没改变的情况下，UIKeyboardWillShowNotification不会触发
-            if (![self.lastFirstResponderViewForShowingInputView isEqual:self.firstResponderView]) {
-                self.lastFirstResponderViewForShowingInputView = self.firstResponderView;
-                [self doDodgeWithAnimated:YES];
-            }
-        });
-    }
-}
-
-
-- (void)registerDodgeView:(UIView*)dodgeView
-{
-    if (![self isRegisteredForDodgeView:dodgeView]) {
-        [self.dodgeViews addObject:dodgeView];
-    }
-}
-
-- (void)unregisterDodgeView:(UIView*)dodgeView
-{
-    [self.dodgeViews removeObject:dodgeView];
-}
-
-- (BOOL)isRegisteredForDodgeView:(UIView*)dodgeView
-{
-    return [self.dodgeViews containsObject:dodgeView];
-}
 @end
