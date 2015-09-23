@@ -28,7 +28,7 @@
     [self.view addGestureRecognizer:tapG];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"test" style:UIBarButtonItemStylePlain target:self action:@selector(testPush)];
-    
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,9 +40,13 @@
 {
     [super viewDidAppear:animated];
     
+    //because `self.automaticallyAdjustsScrollViewInsets==YES` , the contentInset have be set now.
+    //when `registerAsDodgeViewForMLInputDodger`,the`originalContentInsetAsDodgeViewForMLInputDodger` would be
+    //set with the current cotentInset
     self.tableView.shiftHeightAsDodgeViewForMLInputDodger = 44.0f+5.0f;
     [self.tableView registerAsDodgeViewForMLInputDodger];
 }
+
 #pragma mark - event
 - (void)tap
 {
@@ -74,7 +78,7 @@
 {
     [super viewWillLayoutSubviews];
     
-    self.tableView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame),CGRectGetHeight(self.view.frame));
+    self.tableView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame),400);
 }
 
 #pragma mark - tableview

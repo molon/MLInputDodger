@@ -17,22 +17,22 @@
 @property (readonly, nonatomic, weak) UIView *firstResponderView;
 
 /**
- *  可以检测是否已经被注册
+ *  check view is a dodger
  */
 - (BOOL)isRegisteredForDodgeView:(UIView*)dodgeView;
 
 /**
- *  注册闪避View，即为需要根据输入状态改变位置的view
+ *  register as a dodger
  */
 - (void)registerDodgeView:(UIView*)dodgeView;
+
 /**
- *  此方法不一定非得和unregister成对出现，如果需要提前禁用闪避的时候使用
+ *  unregister, do not need to appear in pairs with `registerDodgeView:`
  */
 - (void)unregisterDodgeView:(UIView*)dodgeView;
 
-
 /**
- *  这个无需关心
+ *  change the first responder view
  */
 - (void)firstResponderViewChangeTo:(UIView*)view;
 
