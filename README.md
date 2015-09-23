@@ -1,4 +1,6 @@
 # MLInputDodger
 MLInputDodger
 
-方便自己用的玩意，暂时不建议使用，还未经时间考验。
+The best view dodger for input.
+
+![MLInputDodger](https://raw.githubusercontent.com/molon/MLInputDodger/master/MLInputDodger.gif)
