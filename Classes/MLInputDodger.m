@@ -142,7 +142,6 @@ const double kInputViewAnimationDuration = .25f;
     [self doDodgeWithAnimated:YES];
 }
 
-
 #pragma mark - helper
 //根据当前的firstResponder找到对应的闪避view
 - (UIView*)currentDodgeView
@@ -223,7 +222,6 @@ const double kInputViewAnimationDuration = .25f;
         offset.y = MAX(offset.y, -inset.top);
         
         id nextResponder = [dodgeView nextResponder];
-#warning 在iOS8下 左边当前是数字键盘，然后右边以文字键盘返回的话会出问题，直接返回的话会发现位置不对，交互返回的话键盘会消失了, 还需要研究，真机没测
         if ([nextResponder isKindOfClass:[UIViewController class]]) {
             //这个是为了解决导航器pop后 viewController.view 的frame会被transition重置
             if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
@@ -297,7 +295,6 @@ const double kInputViewAnimationDuration = .25f;
         newY = MIN(newY, oldY);
         
         id nextResponder = [dodgeView nextResponder];
-#warning 在iOS8下 左边当前是数字键盘，然后右边以文字键盘返回的话会出问题，直接返回的话会发现位置不对，交互返回的话键盘会消失了, 还需要研究，真机没测
         if ([nextResponder isKindOfClass:[UIViewController class]]) {
             //这个是为了解决导航器pop后 viewController.view 的frame会被transition重置
             if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){

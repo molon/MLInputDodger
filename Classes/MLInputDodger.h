@@ -25,6 +25,7 @@
  *  注册闪避View，即为需要根据输入状态改变位置的view
  */
 - (void)registerDodgeView:(UIView*)dodgeView;
+
 /**
  *  此方法不一定非得和unregister成对出现，如果需要提前禁用闪避的时候使用
  */
