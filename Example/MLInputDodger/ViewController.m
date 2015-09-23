@@ -21,14 +21,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    self.title = @"MLInputDodger";
     
     UITapGestureRecognizer *tapG = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap)];
     [self.view addGestureRecognizer:tapG];
-    
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    
-    self.view.shiftHeightAsDodgeViewForMLInputDodger = 50.0f;
-    [self.view registerAsDodgeViewForMLInputDodger];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -36,14 +32,13 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
+    [super viewDidAppear:animated];
+    
+    //please use the method in viewDidAppear
+    self.view.shiftHeightAsDodgeViewForMLInputDodger = 50.0f;
+    [self.view registerAsDodgeViewForMLInputDodger];
 }
 
 - (IBAction)buttonPressed:(id)sender {
