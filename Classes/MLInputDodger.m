@@ -176,10 +176,22 @@ const double kInputViewAnimationDuration = .25f;
     NSDictionary *userInfo = [notification userInfo];
     self.inputViewAnimationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     self.inputViewFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    
+    //fix iOS8 bug:
+    //In iOS8 and iPhone5s:
+    //If vc1 keyboard type is numberPad and vc2 keyboard type is normal,then pop vc2 to vc1
+    //`[[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.y` will > 4000
+    //So we must ignore the orgin.y in this case.
+    if (self.inputViewFrame.origin.y>[UIScreen mainScreen].bounds.size.height) {
+        CGRect adjustFrame = self.inputViewFrame;
+        adjustFrame.origin.y = [UIScreen mainScreen].bounds.size.height-adjustFrame.size.height;
+        self.inputViewFrame = adjustFrame;
+    }
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification
 {
+//    NSLog(@"keyboardWillShow:%@",NSStringFromCGRect([[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue]));
     BOOL animated = YES;
     if ([self.lastFirstResponderViewForShowInputView isEqual:self.firstResponderView]) {
         animated = NO;
@@ -193,6 +205,7 @@ const double kInputViewAnimationDuration = .25f;
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
+//    NSLog(@"keyboardWillHide:%@",NSStringFromCGRect([[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue]));
     self.lastFirstResponderViewForShowInputView = nil;
     
     [self updateInputViewDetailWithKeyboardNotification:notification];
