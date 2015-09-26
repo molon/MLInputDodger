@@ -108,9 +108,12 @@
         
         UITextField *textFiled = [[UITextField alloc]initWithFrame:CGRectInset(cell.bounds, 5, 5)];
         textFiled.backgroundColor = [UIColor colorWithWhite:0.763 alpha:1.000];
+        textFiled.tag = 100;
         [cell.contentView addSubview:textFiled];
     }
     
+    UITextField *textFiled = (UITextField *)[cell.contentView viewWithTag:100];
+    textFiled.text = [NSString stringWithFormat:@"%ld",indexPath.row];
     
     return cell;
 }
