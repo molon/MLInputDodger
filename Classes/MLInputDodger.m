@@ -104,11 +104,6 @@ const double kInputViewAnimationDuration = .25f;
 #pragma mark - setter
 - (void)setFirstResponderView:(UIView *)firstResponderView
 {
-    //In iOS7，UIActionSheet can be first responder view，we need ignore it.
-    if ([firstResponderView isKindOfClass:[UIActionSheet class]]) {
-        return;
-    }
-    
     //remove the common input accessory view who can hide input view
     if ([_firstResponderView.inputAccessoryView isEqual:self.retractInputAccessoryView]) {
         [_firstResponderView performSelector:@selector(setInputAccessoryView:) withObject:nil];
@@ -130,7 +125,12 @@ const double kInputViewAnimationDuration = .25f;
 - (void)firstResponderViewChangeTo:(UIView*)view
 {
     NSAssert(view, @"firstResponderView cannot be changed to nil");
-    if ([self.firstResponderView isEqual:view]) {
+    if ([self.firstResponderView isEqual:view]||(!self.firstResponderView&&!view)) {
+        return;
+    }
+    
+    //some view（like UIActionSheet in iOS7, webView）can become first responder, but it will not show the inputview(like keyboard), so we'd better ignore it.
+    if (![view respondsToSelector:@selector(setInputAccessoryView:)]||![view respondsToSelector:@selector(setInputView:)]) {
         return;
     }
     
