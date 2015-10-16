@@ -29,8 +29,12 @@
 - (UIButton *)button
 {
     if (!_button) {
-        UIButton *button = [[UIButton alloc]init];
-        [button setImage:[UIImage imageNamed:[@"MLInputDodger.bundle" stringByAppendingPathComponent:@"retract"]] forState:UIControlStateNormal];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        //see https://github.com/CocoaPods/CocoaPods/issues/3226
+        NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(@"MLInputDodger")];
+        NSString *bundlePath = [bundle pathForResource:@"MLInputDodger" ofType:@"bundle"];
+        [button setImage:[UIImage imageNamed:[bundlePath stringByAppendingPathComponent:@"retract"]] forState:UIControlStateNormal];
         [button addTarget:self action:@selector(retract) forControlEvents:UIControlEventTouchUpInside];
         
         button.layer.cornerRadius = 5.0f;
