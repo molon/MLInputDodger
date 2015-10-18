@@ -20,4 +20,13 @@ but if you use this library, tell me if you like. :)**
 }
 ```   
 Then the subviews who can becomeFirstResponder will trigger dodge.  
-If you need custom shiftHeight for special responder, just set the `shiftHeightAsFirstResponderForMLInputDodger` property.
+If you need custom shiftHeight for special responder, just set the `shiftHeightAsFirstResponderForMLInputDodger` property.  
+   
+   
+Disbale default retract input accessory view:
+
+```
+self.view.dontUseDefaultRetractViewAsDodgeViewForMLInputDodger = NO; //for all subviews of self.view
+
+self.testView1.dontUseDefaultRetractViewAsFirstResponderForMLInputDodger = NO; //for sepecial
+```
