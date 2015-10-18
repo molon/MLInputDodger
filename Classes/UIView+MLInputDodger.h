@@ -11,6 +11,11 @@
 @interface UIView (MLInputDodger)
 
 /**
+ *  The config of original y. When `registerAsDodgeViewForMLInputDodger`, if value of the property is 0, it's will be set with current y.
+ */
+@property (nonatomic, assign) CGFloat originalYAsDodgeViewForMLInputDodger;
+
+/**
  *  the shift height as dodger
  */
 @property (nonatomic, assign) CGFloat shiftHeightAsDodgeViewForMLInputDodger;
@@ -21,9 +26,14 @@
 @property (nonatomic, assign) CGFloat shiftHeightAsFirstResponderForMLInputDodger;
 
 /**
- *  The config of original y. When `registerAsDodgeViewForMLInputDodger`, if value of the property is 0, it's will be set with current y.
+ *  Dont use default retract view as dodger
  */
-@property (nonatomic, assign) CGFloat originalYAsDodgeViewForMLInputDodger;
+@property (nonatomic, assign) BOOL dontUseDefaultRetractViewAsDodgeViewForMLInputDodger;
+
+/**
+ *  Dont use default retract view as first responder
+ */
+@property (nonatomic, assign) BOOL dontUseDefaultRetractViewAsFirstResponderForMLInputDodger;
 
 /**
  *  register as a dodger conveniently

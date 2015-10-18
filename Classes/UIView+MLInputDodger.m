@@ -10,9 +10,13 @@
 #import "MLInputDodger.h"
 #import <objc/runtime.h>
 
+static char originalYAsDodgeViewForMLInputDodgerKey;
+
 static char shiftHeightAsDodgeViewForMLInputDodgerKey;
 static char shiftHeightAsFirstResponderForMLInputDodgerKey;
-static char originalYAsDodgeViewForMLInputDodgerKey;
+
+static char dontUseDefaultRetractViewAsDodgeViewForMLInputDodgerKey;
+static char dontUseDefaultRetractViewAsFirstResponderForMLInputDodgerKey;
 
 /**
  *  swizzle method
@@ -56,6 +60,9 @@ void MLInputDodger_Swizzle(Class c, SEL origSEL, SEL newSEL)
     MLInputDodger_Swizzle([self class], @selector(becomeFirstResponder), @selector(__MLInputDodger_hook_becomeFirstResponder));
 }
 
+
+#pragma mark - getter and setter
+
 - (CGFloat)shiftHeightAsDodgeViewForMLInputDodger
 {
     return [objc_getAssociatedObject(self,&shiftHeightAsDodgeViewForMLInputDodgerKey) doubleValue];
@@ -96,6 +103,34 @@ void MLInputDodger_Swizzle(Class c, SEL origSEL, SEL newSEL)
     
     [self willChangeValueForKey:key];
     objc_setAssociatedObject(self, &originalYAsDodgeViewForMLInputDodgerKey, @(originalYAsDodgeViewForMLInputDodger), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self didChangeValueForKey:key];
+}
+
+- (BOOL)dontUseDefaultRetractViewAsDodgeViewForMLInputDodger
+{
+    return [objc_getAssociatedObject(self,&dontUseDefaultRetractViewAsDodgeViewForMLInputDodgerKey) boolValue];
+}
+
+- (void)setDontUseDefaultRetractViewAsDodgeViewForMLInputDodger:(BOOL)dontUseDefaultRetractViewAsDodgeViewForMLInputDodger
+{
+    static NSString * key = @"dontUseDefaultRetractViewAsDodgeViewForMLInputDodger";
+    
+    [self willChangeValueForKey:key];
+    objc_setAssociatedObject(self, &dontUseDefaultRetractViewAsDodgeViewForMLInputDodgerKey, @(dontUseDefaultRetractViewAsDodgeViewForMLInputDodger), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self didChangeValueForKey:key];
+}
+
+- (BOOL)dontUseDefaultRetractViewAsFirstResponderForMLInputDodger
+{
+    return [objc_getAssociatedObject(self,&dontUseDefaultRetractViewAsFirstResponderForMLInputDodgerKey) boolValue];
+}
+
+- (void)setDontUseDefaultRetractViewAsFirstResponderForMLInputDodger:(BOOL)dontUseDefaultRetractViewAsFirstResponderForMLInputDodger
+{
+    static NSString * key = @"dontUseDefaultRetractViewAsFirstResponderForMLInputDodger";
+    
+    [self willChangeValueForKey:key];
+    objc_setAssociatedObject(self, &dontUseDefaultRetractViewAsFirstResponderForMLInputDodgerKey, @(dontUseDefaultRetractViewAsFirstResponderForMLInputDodger), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self didChangeValueForKey:key];
 }
 

@@ -113,8 +113,17 @@ const double kInputViewAnimationDuration = .25f;
     
     //if no, add the common input accessory view who can hide input view
     if (!firstResponderView.inputAccessoryView) {
+        if (firstResponderView.dontUseDefaultRetractViewAsFirstResponderForMLInputDodger) {
+            return;
+        }
+        
+        //for textview especially
+        if ([firstResponderView isKindOfClass:[UITextView class]]&&!((UITextView*)firstResponderView).editable) {
+            return;
+        }
+        
         UIView *dodgeView = [self currentDodgeView];
-        if (dodgeView) {
+        if (dodgeView&&!dodgeView.dontUseDefaultRetractViewAsDodgeViewForMLInputDodger) {
             self.retractInputAccessoryView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, kMLInputDodgerRetractViewDefaultHeight);
             [firstResponderView performSelector:@selector(setInputAccessoryView:) withObject:self.retractInputAccessoryView];
         }
@@ -125,9 +134,6 @@ const double kInputViewAnimationDuration = .25f;
 - (void)firstResponderViewChangeTo:(UIView*)view
 {
     NSAssert(view, @"firstResponderView cannot be changed to nil");
-    if ([self.firstResponderView isEqual:view]||(!self.firstResponderView&&!view)) {
-        return;
-    }
     
     //some view（like UIActionSheet in iOS7, webView）can become first responder, but it will not show the inputview(like keyboard), so we'd better ignore it.
     if (![view respondsToSelector:@selector(setInputAccessoryView:)]||![view respondsToSelector:@selector(setInputView:)]) {
