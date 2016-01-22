@@ -338,6 +338,15 @@ const double kInputViewAnimationDuration = .25f;
     void(^dodgeBlock)(CGFloat) = ^(CGFloat completeY){
         CGRect frame = dodgeView.frame;
         frame.origin.y = completeY;
+        
+        //see:https://github.com/molon/MLInputDodger/issues/23#issuecomment-173836788
+        //Because when use SouGou input,it would add a spring animation to dodge view.
+        //So we need to remove it.
+        CAAnimation *animation = [dodgeView.layer animationForKey:@"position"];
+        if (animation&&[animation isKindOfClass:[CASpringAnimation class]]) {
+            [dodgeView.layer removeAnimationForKey:@"position"];
+        }
+        
         if (animated) {
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:kInputViewAnimationDuration];
