@@ -249,23 +249,28 @@ const double kInputViewAnimationDuration = .25f;
     }
     
     void(^dodgeBlock)(UIEdgeInsets,CGPoint,BOOL) = ^(UIEdgeInsets inset,CGPoint offset,BOOL forHide){
+        void (^changeDodgerViewBlock)() = ^{
+            dodgeView.contentInset = inset;
+            if (!forHide){
+                [dodgeView setContentOffset:offset animated:NO];
+            }
+            
+            if (self.animateAlongsideBlock) {
+                self.animateAlongsideBlock(dodgeView,self.lastFirstResponderViewForShowInputView,self.inputViewFrame);
+            }
+        };
+        
         if (animated) {
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:kInputViewAnimationDuration];
             [UIView setAnimationCurve:self.inputViewAnimationCurve];
             [UIView setAnimationBeginsFromCurrentState:YES];
             
-            dodgeView.contentInset = inset;
-            if (!forHide){
-                [dodgeView setContentOffset:offset animated:NO];
-            }
+            changeDodgerViewBlock();
             
             [UIView commitAnimations];
         }else{
-            dodgeView.contentInset = inset;
-            if (!forHide){
-                [dodgeView setContentOffset:offset animated:NO];
-            }
+            changeDodgerViewBlock();
         }
     };
 
@@ -347,17 +352,25 @@ const double kInputViewAnimationDuration = .25f;
             [dodgeView.layer removeAnimationForKey:@"position"];
         }
         
+        void (^changeDodgerViewBlock)() = ^{
+            dodgeView.frame = frame;
+            
+            if (self.animateAlongsideBlock) {
+                self.animateAlongsideBlock(dodgeView,self.lastFirstResponderViewForShowInputView,self.inputViewFrame);
+            }
+        };
+        
         if (animated) {
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:kInputViewAnimationDuration];
             [UIView setAnimationCurve:self.inputViewAnimationCurve];
             [UIView setAnimationBeginsFromCurrentState:YES];
             
-            dodgeView.frame = frame;
+            changeDodgerViewBlock();
             
             [UIView commitAnimations];
         }else{
-            dodgeView.frame = frame;
+            changeDodgerViewBlock();
         }
     };
     
@@ -383,7 +396,7 @@ const double kInputViewAnimationDuration = .25f;
         CGFloat mustVisibleYForWindow = frameInWindow.origin.y+frameInWindow.size.height+shiftHeight;
         
         newY = MIN(oldY, keyboardOrginY - mustVisibleYForWindow + dodgeView.frame.origin.y);
-        //ensure that the view will not move up devilishly
+        //ensure that the view will not move up excessively
         newY = MAX(newY, keyboardOrginY - CGRectGetHeight(dodgeView.frame));
         //ensure that the view will not move down
         newY = MIN(newY, oldY);

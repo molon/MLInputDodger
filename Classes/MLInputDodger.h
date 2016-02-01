@@ -17,6 +17,11 @@
 @property (readonly, nonatomic, weak) UIView *firstResponderView;
 
 /**
+ *  animate alongside block after dodgerView's frame(or contentInset) changed
+ */
+@property (nonatomic, copy) void(^animateAlongsideBlock)(UIView *dodgerView,UIView *firstResponderView,CGRect inputViewFrame);
+
+/**
  *  check view is a dodger
  */
 - (BOOL)isRegisteredForDodgeView:(UIView*)dodgeView;
