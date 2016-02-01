@@ -28,14 +28,6 @@
     [self.view addGestureRecognizer:tapG];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Push" style:UIBarButtonItemStylePlain target:self action:@selector(testPush)];
-
-    //see:https://github.com/molon/MLInputDodger/issues/25
-    //We can use the animte alongside block to adjust scrollIndicatorInsets of UIScrollView or other.
-    [[MLInputDodger dodger]setAnimateAlongsideBlock:^(UIView *dodgerView,UIView *firstResponderView,CGRect inputViewFrame) {
-        if ([dodgerView isKindOfClass:[UIScrollView class]]) {
-            ((UIScrollView*)dodgerView).scrollIndicatorInsets = ((UIScrollView*)dodgerView).contentInset;
-        }
-    }];
 }
 
 - (void)didReceiveMemoryWarning {
