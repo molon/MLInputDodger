@@ -7,7 +7,6 @@
 //
 
 #import "MLInputDodger.h"
-#import "MLInputDodgerRetractView.h"
 
 #define CHILD(childClass,object) \
 ((childClass *)object) \
@@ -248,15 +247,23 @@ const double kInputViewAnimationDuration = .25f;
         return;
     }
     
-    void(^dodgeBlock)(UIEdgeInsets,CGPoint,BOOL) = ^(UIEdgeInsets inset,CGPoint offset,BOOL forHide){
+    void(^dodgeBlock)(UIEdgeInsets,CGPoint) = ^(UIEdgeInsets inset,CGPoint offset){
         void (^changeDodgerViewBlock)() = ^{
+            BOOL forShow = self.lastFirstResponderViewForShowInputView!=nil;
+            
             dodgeView.contentInset = inset;
-            if (!forHide){
+            if (forShow){
                 [dodgeView setContentOffset:offset animated:NO];
             }
             
             if (self.animateAlongsideBlock) {
-                self.animateAlongsideBlock(dodgeView,self.lastFirstResponderViewForShowInputView,self.inputViewFrame);
+                self.animateAlongsideBlock(forShow,dodgeView,self.lastFirstResponderViewForShowInputView,self.inputViewFrame);
+            }
+            
+            if (self.lastFirstResponderViewForShowInputView.animateAlongsideAsFirstResponderForMLInputDodgerBlock) {
+                self.lastFirstResponderViewForShowInputView.animateAlongsideAsFirstResponderForMLInputDodgerBlock(forShow,dodgeView,self.lastFirstResponderViewForShowInputView,self.inputViewFrame);
+            }else if (dodgeView.animateAlongsideAsDodgeViewForMLInputDodgerBlock){
+                dodgeView.animateAlongsideAsDodgeViewForMLInputDodgerBlock(forShow,dodgeView,self.lastFirstResponderViewForShowInputView,self.inputViewFrame);
             }
         };
         
@@ -315,14 +322,14 @@ const double kInputViewAnimationDuration = .25f;
             //so we detect it, and dodge again
             if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
                 [CHILD(UIViewController, nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                    dodgeBlock(inset,offset,self.lastFirstResponderViewForShowInputView==nil);
+                    dodgeBlock(inset,offset);
                 }];
                 return;
             }
         }
     }
     
-    dodgeBlock(inset,offset,self.lastFirstResponderViewForShowInputView==nil);
+    dodgeBlock(inset,offset);
 }
 
 /**
@@ -355,8 +362,16 @@ const double kInputViewAnimationDuration = .25f;
         void (^changeDodgerViewBlock)() = ^{
             dodgeView.frame = frame;
             
+            BOOL forShow = self.lastFirstResponderViewForShowInputView!=nil;
+            
             if (self.animateAlongsideBlock) {
-                self.animateAlongsideBlock(dodgeView,self.lastFirstResponderViewForShowInputView,self.inputViewFrame);
+                self.animateAlongsideBlock(forShow,dodgeView,self.lastFirstResponderViewForShowInputView,self.inputViewFrame);
+            }
+            
+            if (self.lastFirstResponderViewForShowInputView.animateAlongsideAsFirstResponderForMLInputDodgerBlock) {
+                self.lastFirstResponderViewForShowInputView.animateAlongsideAsFirstResponderForMLInputDodgerBlock(forShow,dodgeView,self.lastFirstResponderViewForShowInputView,self.inputViewFrame);
+            }else if (dodgeView.animateAlongsideAsDodgeViewForMLInputDodgerBlock){
+                dodgeView.animateAlongsideAsDodgeViewForMLInputDodgerBlock(forShow,dodgeView,self.lastFirstResponderViewForShowInputView,self.inputViewFrame);
             }
         };
         

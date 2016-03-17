@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "UIView+MLInputDodger.h"
 #import "UIScrollView+MLInputDodger.h"
+#import "MLInputDodgerRetractView.h"
 
 @interface MLInputDodger : NSObject
 
@@ -17,9 +18,9 @@
 @property (readonly, nonatomic, weak) UIView *firstResponderView;
 
 /**
- *  animate alongside block after dodgerView's frame(or contentInset) changed
+ *  animate alongside block after dodgerView's frame(or contentInset，contentOffset) changed
  */
-@property (nonatomic, copy) void(^animateAlongsideBlock)(UIView *dodgerView,UIView *firstResponderView,CGRect inputViewFrame);
+@property (nonatomic, copy) void(^animateAlongsideBlock)(BOOL show,UIView *dodgerView,UIView *firstResponderView,CGRect inputViewFrame);
 
 /**
  *  check view is a dodger
