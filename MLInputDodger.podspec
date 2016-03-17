@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = "MLInputDodger"
-s.version      = "1.3.2"
+s.version      = "1.4.0"
 s.summary      = "The best view dodger for inputting."
 
 s.homepage     = 'https://github.com/molon/MLInputDodger'

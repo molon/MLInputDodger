@@ -18,6 +18,9 @@ static char shiftHeightAsFirstResponderForMLInputDodgerKey;
 static char dontUseDefaultRetractViewAsDodgeViewForMLInputDodgerKey;
 static char dontUseDefaultRetractViewAsFirstResponderForMLInputDodgerKey;
 
+static char animateAlongsideAsDodgeViewForMLInputDodgerBlockKey;
+static char animateAlongsideAsFirstResponderForMLInputDodgerBlockKey;
+
 /**
  *  swizzle method
  */
@@ -131,6 +134,34 @@ void MLInputDodger_Swizzle(Class c, SEL origSEL, SEL newSEL)
     
     [self willChangeValueForKey:key];
     objc_setAssociatedObject(self, &dontUseDefaultRetractViewAsFirstResponderForMLInputDodgerKey, @(dontUseDefaultRetractViewAsFirstResponderForMLInputDodger), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self didChangeValueForKey:key];
+}
+
+-(void (^)(BOOL, UIView *, UIView *, CGRect))animateAlongsideAsDodgeViewForMLInputDodgerBlock
+{
+    return objc_getAssociatedObject(self,&animateAlongsideAsDodgeViewForMLInputDodgerBlockKey);
+}
+
+-(void)setAnimateAlongsideAsDodgeViewForMLInputDodgerBlock:(void (^)(BOOL, UIView *, UIView *, CGRect))animateAlongsideAsDodgeViewForMLInputDodgerBlock
+{
+    static NSString * key = @"animateAlongsideAsDodgeViewForMLInputDodgerBlock";
+    
+    [self willChangeValueForKey:key];
+    objc_setAssociatedObject(self, &animateAlongsideAsDodgeViewForMLInputDodgerBlockKey, animateAlongsideAsDodgeViewForMLInputDodgerBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [self didChangeValueForKey:key];
+}
+
+-(void (^)(BOOL, UIView *, UIView *, CGRect))animateAlongsideAsFirstResponderForMLInputDodgerBlock
+{
+    return objc_getAssociatedObject(self,&animateAlongsideAsFirstResponderForMLInputDodgerBlockKey);
+}
+
+-(void)setAnimateAlongsideAsFirstResponderForMLInputDodgerBlock:(void (^)(BOOL, UIView *, UIView *, CGRect))animateAlongsideAsFirstResponderForMLInputDodgerBlock
+{
+    static NSString * key = @"animateAlongsideAsFirstResponderForMLInputDodgerBlock";
+    
+    [self willChangeValueForKey:key];
+    objc_setAssociatedObject(self, &animateAlongsideAsFirstResponderForMLInputDodgerBlockKey, animateAlongsideAsFirstResponderForMLInputDodgerBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
     [self didChangeValueForKey:key];
 }
 

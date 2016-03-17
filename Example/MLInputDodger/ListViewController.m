@@ -12,6 +12,7 @@
 @interface ListViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UILabel *testAnimateAlongsideLabel;
 
 @end
 
@@ -23,12 +24,29 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.tableView];
     
+#define kLabelHeight 50.0f
+#define kLabelBottomMargin 10.0f
+    self.testAnimateAlongsideLabel.frame = CGRectMake(60, self.view.frame.size.height-kLabelBottomMargin-kLabelHeight, 200, kLabelHeight);
+    [self.view addSubview:self.testAnimateAlongsideLabel];
+    
+#warning test for animateAlongsideAsDodgeViewForMLInputDodger
+    __weak __typeof(self)weakSelf = self;
+    [self.tableView setAnimateAlongsideAsDodgeViewForMLInputDodgerBlock:^(BOOL show,UIView *dodgerView,UIView *firstResponderView,CGRect inputViewFrame) {
+        __strong __typeof(weakSelf)sSelf = weakSelf;
+        CGRect frame = sSelf.testAnimateAlongsideLabel.frame;
+        if (show) {
+            frame.origin.y = inputViewFrame.origin.y+kMLInputDodgerRetractViewDefaultHeight-kLabelBottomMargin-kLabelHeight;
+        }else{
+            frame.origin.y = sSelf.view.frame.size.height-kLabelBottomMargin-kLabelHeight;
+        }
+        sSelf.testAnimateAlongsideLabel.frame = frame;
+    }];
+    
     
     UITapGestureRecognizer *tapG = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap)];
     [self.view addGestureRecognizer:tapG];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Push" style:UIBarButtonItemStylePlain target:self action:@selector(testPush)];
-
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,10 +58,10 @@
 {
     [super viewDidAppear:animated];
     
-    //because `self.automaticallyAdjustsScrollViewInsets==YES` , the contentInset have be set now.
+    //because `self.automaticallyAdjustsScrollViewInsets==YES` , the contentInset have been set now.
     //when `registerAsDodgeViewForMLInputDodger`,the`originalContentInsetAsDodgeViewForMLInputDodger` would be
     //set with the current cotentInset
-    self.tableView.shiftHeightAsDodgeViewForMLInputDodger = 44.0f+5.0f;
+    self.tableView.shiftHeightAsDodgeViewForMLInputDodger = 60.0f;
     [self.tableView registerAsDodgeViewForMLInputDodger];
 }
 
@@ -73,12 +91,26 @@
     return _tableView;
 }
 
+- (UILabel *)testAnimateAlongsideLabel
+{
+    if (!_testAnimateAlongsideLabel) {
+        UILabel* label = [[UILabel alloc]init];
+        label.backgroundColor = [UIColor colorWithWhite:0.835 alpha:1.000];
+        label.textColor = [UIColor blackColor];
+        label.font = [UIFont systemFontOfSize:14.0f];
+        label.text = @"testAnimateAlongsideLabel";
+        
+        _testAnimateAlongsideLabel = label;
+    }
+    return _testAnimateAlongsideLabel;
+}
+
 #pragma mark - layout
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
     
-    self.tableView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame),400);
+    self.tableView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame),CGRectGetHeight(self.view.frame)-100);
 }
 
 #pragma mark - tableview
