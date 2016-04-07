@@ -1,7 +1,4 @@
 # MLInputDodger
-MLInputDodger
-
-The keyboard dodger for input.
 
 **My library does not seek any reward,
 but if you use this library, tell me if you like. :)**
@@ -13,8 +10,8 @@ but if you use this library, tell me if you like. :)**
 - Provied a optional default retractButton which can be clicked to hide keyboard. 
 - Use `animateAlongsideBlock` to add your own dodge behaviors for other view or trigger other behavior.
 - With transition complete of two vc, the dodge behavior would be triggered again, ensure dodge behavior.
-- Fixed iOS8's bug: sometimes `UIKeyboardFrameEndUserInfoKey` return strange `origin.y`
-- Fixed SougouInput's bug: sometimes it will produces a ungly spring animation.
+- Fixed iOS8's bug: `UIKeyboardFrameEndUserInfoKey` return strange `origin.y` sometimes
+- Fixed SougouInput's bug: it will produces a ungly spring animation sometimes
 
 
 # Principle
