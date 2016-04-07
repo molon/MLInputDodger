@@ -318,7 +318,7 @@ const double kInputViewAnimationDuration = .25f;
         
         id nextResponder = [dodgeView nextResponder];
         if ([nextResponder isKindOfClass:[UIViewController class]]) {
-            //after pop viewcontroller,the viewcontroller's frame will be reset.
+            //with pop viewcontroller,the previous viewcontroller.view's frame will be reset.
             //so we detect it, and dodge again
             if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
                 [CHILD(UIViewController, nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
@@ -418,7 +418,7 @@ const double kInputViewAnimationDuration = .25f;
         
         id nextResponder = [dodgeView nextResponder];
         if ([nextResponder isKindOfClass:[UIViewController class]]) {
-            //after pop viewcontroller,the viewcontroller's frame will be reset.
+            //with pop viewcontroller,the previous viewcontroller.view's frame will be reset.
             //so we detect it, and dodge again
             if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
                 [CHILD(UIViewController, nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
