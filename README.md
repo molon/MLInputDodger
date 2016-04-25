@@ -1,7 +1,7 @@
 # MLInputDodger
 
 **My library does not seek any reward,
-but if you use this library, tell me if you like. :)**
+but if you use this library, star it if you like. :)**
 
 ![MLInputDodger](https://raw.githubusercontent.com/molon/MLInputDodger/master/MLInputDodger.gif)
 
