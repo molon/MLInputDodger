@@ -12,8 +12,6 @@
 ((childClass *)object) \
 \
 
-const double kInputViewAnimationDuration = .25f;
-
 @interface MLInputDodger()
 
 /**
@@ -32,6 +30,7 @@ const double kInputViewAnimationDuration = .25f;
 @property (nonatomic, weak) UIView *lastFirstResponderViewForShowInputView;
 @property (nonatomic, assign) CGRect inputViewFrame;
 @property (nonatomic, assign) NSInteger inputViewAnimationCurve;
+@property (nonatomic, assign) NSTimeInterval inputViewAnimationDuration;
 
 /**
  *  Common input accessory view who can hide input view
@@ -59,6 +58,7 @@ const double kInputViewAnimationDuration = .25f;
     self = [super init];
     if (self) {
         self.inputViewAnimationCurve = 7;
+        self.inputViewAnimationDuration = .25f;
         
         //add observer
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -179,6 +179,7 @@ const double kInputViewAnimationDuration = .25f;
 - (void)updateInputViewDetailWithKeyboardNotification:(NSNotification *)notification
 {
     NSDictionary *userInfo = [notification userInfo];
+    self.inputViewAnimationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey]doubleValue];
     self.inputViewAnimationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     self.inputViewFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     
@@ -269,7 +270,7 @@ const double kInputViewAnimationDuration = .25f;
         
         if (animated) {
             [UIView beginAnimations:nil context:NULL];
-            [UIView setAnimationDuration:kInputViewAnimationDuration];
+            [UIView setAnimationDuration:self.inputViewAnimationDuration];
             [UIView setAnimationCurve:self.inputViewAnimationCurve];
             [UIView setAnimationBeginsFromCurrentState:YES];
             
@@ -377,7 +378,7 @@ const double kInputViewAnimationDuration = .25f;
         
         if (animated) {
             [UIView beginAnimations:nil context:NULL];
-            [UIView setAnimationDuration:kInputViewAnimationDuration];
+            [UIView setAnimationDuration:self.inputViewAnimationDuration];
             [UIView setAnimationCurve:self.inputViewAnimationCurve];
             [UIView setAnimationBeginsFromCurrentState:YES];
             
