@@ -1,11 +1,13 @@
 language: objective-c
 osx_image: xcode7
-# before_install:
-#     - brew update
-#     - brew uninstall xctool && brew install --HEAD xctool
+before_install:
+    - brew update
+    - brew upgrade xctool
 notifications:
   email:
     - dudl@qq.com
+# after_success:
+#     - bash <(curl -s https://codecov.io/bash)
 
 podfile: Example/Podfile
 script:
