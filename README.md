@@ -1,4 +1,8 @@
 # MLInputDodger
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/molon/MLInputDodger/master/LICENSE)&nbsp;
+[![CocoaPods](http://img.shields.io/cocoapods/v/MLInputDodger.svg?style=flat)](http://cocoapods.org/?q=MLInputDodger)&nbsp;
+[![CocoaPods](http://img.shields.io/cocoapods/p/MLInputDodger.svg?style=flat)](http://cocoapods.org/?q=MLInputDodger)&nbsp;
+[![Build Status](https://travis-ci.org/molon/MLInputDodger.svg?branch=master)](https://travis-ci.org/molon/MLInputDodger)&nbsp;
 
 **My library does not seek any reward,
 but if you use this library, star it if you like. :)**

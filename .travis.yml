@@ -1,4 +1,20 @@
 language: objective-c
 osx_image: xcode7
-cache: cocoapods
+# before_install:
+#     - brew update
+#     - brew uninstall xctool && brew install --HEAD xctool
+notifications:
+  email:
+    - dudl@qq.com
+
 podfile: Example/Podfile
+script:
+  xctool
+  -workspace Example/MLInputDodger.xcworkspace
+  -scheme MLInputDodger
+  -sdk iphonesimulator
+  build 
+  # test 
+  ONLY_ACTIVE_ARCH=NO
+  CODE_SIGN_IDENTITY=""
+  CODE_SIGNING_REQUIRED=NO
