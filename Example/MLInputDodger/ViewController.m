@@ -13,6 +13,8 @@
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextView *testView1;
+@property (weak, nonatomic) IBOutlet UITextField *textField1;
+
 
 @end
 

@@ -21,29 +21,33 @@ static char dontUseDefaultRetractViewAsFirstResponderForMLInputDodgerKey;
 static char animateAlongsideAsDodgeViewForMLInputDodgerBlockKey;
 static char animateAlongsideAsFirstResponderForMLInputDodgerBlockKey;
 
-/**
- *  swizzle method
- */
-void MLInputDodger_Swizzle(Class c, SEL origSEL, SEL newSEL)
-{
-    Method origMethod = class_getInstanceMethod(c, origSEL);
-    Method newMethod = nil;
-    if (!origMethod) {
-        origMethod = class_getClassMethod(c, origSEL);
-        newMethod = class_getClassMethod(c, newSEL);
-    }else{
-        newMethod = class_getInstanceMethod(c, newSEL);
+static inline BOOL __MLInputDodger_class_respondsToSelectorWithoutSuper(Class cls,SEL sel) {
+    unsigned int methodCount = 0;
+    Method *methods = class_copyMethodList(cls, &methodCount);
+    if (methods) {
+        for (unsigned int i = 0; i < methodCount; i++) {
+            if (sel == method_getName(methods[i])){
+                return YES;
+            }
+        }
+        free(methods);
     }
+    return NO;
+}
+
+static inline BOOL __MLInputDodger_class_respondsToSelectorWithoutSuperswizzleInstanceMethod(Class cls, SEL originalSel, SEL newSel) {
+    Method originalMethod = class_getInstanceMethod(cls, originalSel);
+    Method newMethod = class_getInstanceMethod(cls, newSel);
+    if (!originalMethod || !newMethod) return NO;
     
-    if (!origMethod||!newMethod) {
-        return;
-    }
+    NSCAssert(__MLInputDodger_class_respondsToSelectorWithoutSuper(cls,originalSel),
+             @"Can't swizzle instance method of superclass:%@",NSStringFromSelector(originalSel));
+    NSCAssert(__MLInputDodger_class_respondsToSelectorWithoutSuper(cls,newSel),
+             @"Can't swizzle instance method of superclass:%@",NSStringFromSelector(newSel));
     
-    if(class_addMethod(c, origSEL, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))){
-        class_replaceMethod(c, newSEL, method_getImplementation(origMethod), method_getTypeEncoding(origMethod));
-    }else{
-        method_exchangeImplementations(origMethod, newMethod);
-    }
+    method_exchangeImplementations(originalMethod,
+                                   newMethod);
+    return YES;
 }
 
 @implementation UIView (MLInputDodger)
@@ -53,16 +57,13 @@ void MLInputDodger_Swizzle(Class c, SEL origSEL, SEL newSEL)
     if ([self canBecomeFirstResponder]) {
         [[MLInputDodger dodger] firstResponderViewChangeTo:self];
     }
-    
     return [self __MLInputDodger_hook_becomeFirstResponder];
 }
 
 + (void)load
 {
-    //hook become first responder
-    MLInputDodger_Swizzle([self class], @selector(becomeFirstResponder), @selector(__MLInputDodger_hook_becomeFirstResponder));
+    __MLInputDodger_class_respondsToSelectorWithoutSuperswizzleInstanceMethod(self,@selector(becomeFirstResponder), @selector(__MLInputDodger_hook_becomeFirstResponder));
 }
-
 
 #pragma mark - getter and setter
 
