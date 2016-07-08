@@ -35,7 +35,7 @@ static inline BOOL __MLInputDodger_class_respondsToSelectorWithoutSuper(Class cl
     return NO;
 }
 
-static inline BOOL __MLInputDodger_class_respondsToSelectorWithoutSuperswizzleInstanceMethod(Class cls, SEL originalSel, SEL newSel) {
+static inline BOOL __MLInputDodger_swizzleInstanceMethod(Class cls, SEL originalSel, SEL newSel) {
     Method originalMethod = class_getInstanceMethod(cls, originalSel);
     Method newMethod = class_getInstanceMethod(cls, newSel);
     if (!originalMethod || !newMethod) return NO;
@@ -62,7 +62,7 @@ static inline BOOL __MLInputDodger_class_respondsToSelectorWithoutSuperswizzleIn
 
 + (void)load
 {
-    __MLInputDodger_class_respondsToSelectorWithoutSuperswizzleInstanceMethod(self,@selector(becomeFirstResponder), @selector(__MLInputDodger_hook_becomeFirstResponder));
+    __MLInputDodger_swizzleInstanceMethod(self,@selector(becomeFirstResponder), @selector(__MLInputDodger_hook_becomeFirstResponder));
 }
 
 #pragma mark - getter and setter
