@@ -74,7 +74,6 @@
                     <navigationItem key="navigationItem" id="YQ1-MD-pu7"/>
                     <connections>
                         <outlet property="testView1" destination="jm6-2f-pSw" id="q3O-Zx-y4Z"/>
-                        <outlet property="textField1" destination="SyA-Rl-sWL" id="Lga-5x-6WJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
