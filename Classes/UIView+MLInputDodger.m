@@ -21,48 +21,25 @@ static char dontUseDefaultRetractViewAsFirstResponderForMLInputDodgerKey;
 static char animateAlongsideAsDodgeViewForMLInputDodgerBlockKey;
 static char animateAlongsideAsFirstResponderForMLInputDodgerBlockKey;
 
-/**
- *  swizzle method
- */
-void MLInputDodger_Swizzle(Class c, SEL origSEL, SEL newSEL)
-{
-    Method origMethod = class_getInstanceMethod(c, origSEL);
-    Method newMethod = nil;
-    if (!origMethod) {
-        origMethod = class_getClassMethod(c, origSEL);
-        newMethod = class_getClassMethod(c, newSEL);
-    }else{
-        newMethod = class_getInstanceMethod(c, newSEL);
-    }
-    
-    if (!origMethod||!newMethod) {
-        return;
-    }
-    
-    if(class_addMethod(c, origSEL, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))){
-        class_replaceMethod(c, newSEL, method_getImplementation(origMethod), method_getTypeEncoding(origMethod));
-    }else{
-        method_exchangeImplementations(origMethod, newMethod);
-    }
-}
-
 @implementation UIView (MLInputDodger)
 
-- (BOOL)__MLInputDodger_hook_becomeFirstResponder
+- (BOOL)__MLInputDodger_hookBecomeFirstResponder
 {
     if ([self canBecomeFirstResponder]) {
         [[MLInputDodger dodger] firstResponderViewChangeTo:self];
     }
-    
-    return [self __MLInputDodger_hook_becomeFirstResponder];
+    return [self __MLInputDodger_hookBecomeFirstResponder];
 }
 
 + (void)load
 {
-    //hook become first responder
-    MLInputDodger_Swizzle([self class], @selector(becomeFirstResponder), @selector(__MLInputDodger_hook_becomeFirstResponder));
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Method originalMethod = class_getInstanceMethod(self, @selector(becomeFirstResponder));
+        Method newMethod = class_getInstanceMethod(self, @selector(__MLInputDodger_hookBecomeFirstResponder));
+        method_exchangeImplementations(originalMethod,newMethod);
+    });
 }
-
 
 #pragma mark - getter and setter
 
