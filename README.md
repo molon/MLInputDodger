@@ -33,7 +33,7 @@ but if you use this library, star it if you like. :)**
     [super viewDidAppear:animated];
     
     self.view.shiftHeightAsDodgeViewForMLInputDodger = 50.0f;
-    [self.view registerAsDodgeViewForMLInputDodger];
+    [self.view registerAsDodgeViewForMLInputDodgerWithOriginalY:self.view.frame.origin.y];
 }
 ```   
 Then the subviews who can becomeFirstResponder will trigger dodge.  

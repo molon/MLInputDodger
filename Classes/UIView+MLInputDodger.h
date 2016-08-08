@@ -58,7 +58,7 @@
 - (void)registerAsDodgeViewForMLInputDodgerWithOriginalY:(CGFloat)originalY;
 
 /**
- *  unregister conveniently
+ *  unregister conveniently, do not need to appear in pairs with `registerAsDodgeViewForMLInputDodger...:`
  */
 - (void)unregisterAsDodgeViewForMLInputDodger;
 
