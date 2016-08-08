@@ -11,8 +11,15 @@
 @interface UIScrollView (MLInputDodger)
 
 /**
- *  The config of original contentInset. When `registerAsDodgeViewForMLInputDodger`, if value of the property is `UIEdgeInsetsZero`, it's will be set with current contentInset
+ *  The original contentInset of dodge view
  */
 @property (nonatomic, assign) UIEdgeInsets originalContentInsetAsDodgeViewForMLInputDodger;
+
+/**
+ register as a dodger with original contentInset
+ 
+ @param originalContentInset the original contentInset of dodge view
+ */
+- (void)registerAsDodgeViewForMLInputDodgerWithOriginalContentInset:(UIEdgeInsets)originalContentInset;
 
 @end

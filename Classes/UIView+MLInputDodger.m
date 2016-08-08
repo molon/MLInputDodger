@@ -143,13 +143,10 @@ static char animateAlongsideAsFirstResponderForMLInputDodgerBlockKey;
 }
 
 #pragma mark - outcall
-- (void)registerAsDodgeViewForMLInputDodger
+- (void)registerAsDodgeViewForMLInputDodgerWithOriginalY:(CGFloat)originalY
 {
-    if (![[MLInputDodger dodger] isRegisteredForDodgeView:self]) {
-        if (self.originalYAsDodgeViewForMLInputDodger==0) {
-            self.originalYAsDodgeViewForMLInputDodger = self.frame.origin.y;
-        }
-    }
+    self.originalYAsDodgeViewForMLInputDodger = originalY;
+
     [[MLInputDodger dodger]registerDodgeView:self];
 }
 

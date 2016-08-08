@@ -11,7 +11,7 @@
 @interface UIView (MLInputDodger)
 
 /**
- *  The config of original y. When `registerAsDodgeViewForMLInputDodger`, if value of the property is 0, it's will be set with current y.
+ *  The original origin.y of dodge view
  */
 @property (nonatomic, assign) CGFloat originalYAsDodgeViewForMLInputDodger;
 
@@ -51,9 +51,11 @@
 @property (nonatomic, copy) void(^animateAlongsideAsFirstResponderForMLInputDodgerBlock)(BOOL show,UIView *dodgerView,UIView *firstResponderView,CGRect inputViewFrame);
 
 /**
- *  register as a dodger conveniently
+ register as a dodger with original origin.y
+ 
+ @param originalY the original origin.y of dodge view
  */
-- (void)registerAsDodgeViewForMLInputDodger;
+- (void)registerAsDodgeViewForMLInputDodgerWithOriginalY:(CGFloat)originalY;
 
 /**
  *  unregister conveniently

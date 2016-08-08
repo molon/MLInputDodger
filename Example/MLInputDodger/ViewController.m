@@ -38,7 +38,7 @@
     
     //please use the method in viewDidAppear
     self.view.shiftHeightAsDodgeViewForMLInputDodger = 50.0f;
-    [self.view registerAsDodgeViewForMLInputDodger];
+    [self.view registerAsDodgeViewForMLInputDodgerWithOriginalY:self.view.frame.origin.y];
 }
 
 - (IBAction)buttonPressed:(id)sender {
