@@ -8,10 +8,6 @@
 
 #import "MLInputDodger.h"
 
-#define CHILD(childClass,object) \
-((childClass *)object) \
-\
-
 @interface MLInputDodger()
 
 /**
@@ -306,23 +302,23 @@
         CGRect dodgeViewFrameInWindow = [dodgeView.superview convertRect:dodgeView.frame toView:dodgeView.window];
         CGFloat dodgeViewFrameBottomInWindow = CGRectGetMaxY(dodgeViewFrameInWindow);
         
-        inset.bottom += MAX(0,dodgeViewFrameBottomInWindow-keyboardOrginY);
+        inset.bottom += fmax(0,dodgeViewFrameBottomInWindow-keyboardOrginY);
         
         CGFloat mustDisplayHeight = CGRectGetHeight(self.firstResponderView.frame)+shiftHeight;
         //the assert is not needed, if you use the library normally.
 //        NSAssert(CGRectGetHeight(dodgeViewFrameInWindow)>=mustDisplayHeight+inset.top, @"the height of dodgeScrollView cannot be too small or shift height cannot be too large");
 //        NSAssert(keyboardOrginY-dodgeViewFrameInWindow.origin.y>=mustDisplayHeight+inset.top, @"the y of dodgeScrollView cannot too low or shift height cannot be too large");
         
-        offset.y = frameInDodgeView.origin.y-inset.top-(MIN(keyboardOrginY,dodgeViewFrameBottomInWindow)-dodgeViewFrameInWindow.origin.y-mustDisplayHeight-inset.top);
-        offset.y = MIN(offset.y, dodgeView.contentSize.height-CGRectGetHeight(dodgeViewFrameInWindow)+inset.bottom);
-        offset.y = MAX(offset.y, -inset.top);
+        offset.y = frameInDodgeView.origin.y-inset.top-(fmin(keyboardOrginY,dodgeViewFrameBottomInWindow)-dodgeViewFrameInWindow.origin.y-mustDisplayHeight-inset.top);
+        offset.y = fmin(offset.y, dodgeView.contentSize.height-CGRectGetHeight(dodgeViewFrameInWindow)+inset.bottom);
+        offset.y = fmax(offset.y, -inset.top);
         
         id nextResponder = [dodgeView nextResponder];
         if ([nextResponder isKindOfClass:[UIViewController class]]) {
             //with pop viewcontroller,the previous viewcontroller.view's frame will be reset.
             //so we detect it, and dodge again
-            if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
-                [CHILD(UIViewController, nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            if ([((UIViewController*)nextResponder).transitionCoordinator isAnimated]){
+                [((UIViewController*)nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
                     dodgeBlock(inset,offset);
                 }];
                 return;
@@ -344,7 +340,7 @@
     }
     
     if ([dodgeView isKindOfClass:[UIScrollView class]]) {
-        [self doDodgeWithAnimated:animated dodgeScrollView:CHILD(UIScrollView, dodgeView)];
+        [self doDodgeWithAnimated:animated dodgeScrollView:((UIScrollView*)dodgeView)];
         return;
     }
     
@@ -411,18 +407,18 @@
         
         CGFloat mustVisibleYForWindow = frameInWindow.origin.y+frameInWindow.size.height+shiftHeight;
         
-        newY = MIN(oldY, keyboardOrginY - mustVisibleYForWindow + dodgeView.frame.origin.y);
+        newY = fmin(oldY, keyboardOrginY - mustVisibleYForWindow + dodgeView.frame.origin.y);
         //ensure that the view will not move up excessively
-        newY = MAX(newY, keyboardOrginY - CGRectGetHeight(dodgeView.frame));
+        newY = fmax(newY, keyboardOrginY - CGRectGetHeight(dodgeView.frame));
         //ensure that the view will not move down
-        newY = MIN(newY, oldY);
+        newY = fmin(newY, oldY);
         
         id nextResponder = [dodgeView nextResponder];
         if ([nextResponder isKindOfClass:[UIViewController class]]) {
             //with pop viewcontroller,the previous viewcontroller.view's frame will be reset.
             //so we detect it, and dodge again
-            if ([CHILD(UIViewController, nextResponder).transitionCoordinator isAnimated]){
-                [CHILD(UIViewController, nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            if ([((UIViewController*)nextResponder).transitionCoordinator isAnimated]){
+                [((UIViewController*)nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
                     dodgeBlock(newY);
                 }];
                 return;

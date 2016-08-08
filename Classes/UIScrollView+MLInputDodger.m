@@ -29,14 +29,29 @@ static char originalContentInsetAsDodgeViewForMLInputDodgerKey;
     [self didChangeValueForKey:key];
 }
 
-- (void)registerAsDodgeViewForMLInputDodger
+- (CGFloat)originalYAsDodgeViewForMLInputDodger
 {
-    if (![[MLInputDodger dodger] isRegisteredForDodgeView:self]) {
-        if (UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsetsZero, self.originalContentInsetAsDodgeViewForMLInputDodger)) {
-            self.originalContentInsetAsDodgeViewForMLInputDodger = self.contentInset;
-        }
-    }
-    [super registerAsDodgeViewForMLInputDodger];
+    NSAssert(NO, @"`originalYAsDodgeViewForMLInputDodger` cannot be used for %@",NSStringFromClass([self class]));
+    return [super originalYAsDodgeViewForMLInputDodger];
+}
+
+- (void)setOriginalYAsDodgeViewForMLInputDodger:(CGFloat)originalYAsDodgeViewForMLInputDodger
+{
+    NSAssert(NO, @"`setOriginalYAsDodgeViewForMLInputDodger:` cannot be used for %@",NSStringFromClass([self class]));
+    [super setOriginalYAsDodgeViewForMLInputDodger:originalYAsDodgeViewForMLInputDodger];
+}
+
+- (void)registerAsDodgeViewForMLInputDodgerWithOriginalY:(CGFloat)originalY
+{
+    NSAssert(NO, @"`registerAsDodgeViewForMLInputDodgerWithOriginalY:` cannot be used for %@",NSStringFromClass([self class]));
+    [super registerAsDodgeViewForMLInputDodgerWithOriginalY:originalY];
+}
+
+- (void)registerAsDodgeViewForMLInputDodgerWithOriginalContentInset:(UIEdgeInsets)originalContentInset
+{
+    self.originalContentInsetAsDodgeViewForMLInputDodger = originalContentInset;
+    
+    [[MLInputDodger dodger]registerDodgeView:self];
 }
 
 @end
