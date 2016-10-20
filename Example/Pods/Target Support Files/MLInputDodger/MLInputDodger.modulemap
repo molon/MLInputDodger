@@ -1,6 +1,0 @@
-module MLInputDodger {
-  umbrella header "MLInputDodger-umbrella.h"
-
-  export *
-  module * { export * }
-}

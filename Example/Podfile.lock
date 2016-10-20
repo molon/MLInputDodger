@@ -1,5 +1,5 @@
 PODS:
-  - MLInputDodger (1.0.0)
+  - MLInputDodger (1.5.0)
 
 DEPENDENCIES:
   - MLInputDodger (from `../MLInputDodger.podspec`)
@@ -9,6 +9,8 @@ EXTERNAL SOURCES:
     :path: "../MLInputDodger.podspec"
 
 SPEC CHECKSUMS:
-  MLInputDodger: 01b7f2679aff2f81491777d00c4a890796f8c59a
+  MLInputDodger: 832d3163b394405fd5a5ed2b0cbbc264ed10c7c0
 
-COCOAPODS: 0.38.1
+PODFILE CHECKSUM: 8518658652c642e6f1eb9223a7d1b60b8b8096dd
+
+COCOAPODS: 1.0.1
