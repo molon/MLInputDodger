@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D24B18045B8CBB8E0D1C875 /* libPods-MLInputDodger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A086C4D7472B5F3FD41B136 /* libPods-MLInputDodger.a */; };
 		360F92231B65C6CD00A6F9F4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 360F92221B65C6CD00A6F9F4 /* main.m */; };
 		360F92261B65C6CD00A6F9F4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 360F92251B65C6CD00A6F9F4 /* AppDelegate.m */; };
 		360F92291B65C6CD00A6F9F4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 360F92281B65C6CD00A6F9F4 /* ViewController.m */; };
@@ -15,7 +16,6 @@
 		360F92311B65C6CD00A6F9F4 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 360F922F1B65C6CD00A6F9F4 /* LaunchScreen.xib */; };
 		360F923D1B65C6CD00A6F9F4 /* MLInputDodgerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 360F923C1B65C6CD00A6F9F4 /* MLInputDodgerTests.m */; };
 		360F92521B6747D500A6F9F4 /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 360F92511B6747D500A6F9F4 /* ListViewController.m */; };
-		36E996DEF95BB1C72F73D7F0 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B846FD30C3C7D8134CF5C6A /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,8 +29,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0B846FD30C3C7D8134CF5C6A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		1C08626793022444E3866A14 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		360F921D1B65C6CD00A6F9F4 /* MLInputDodger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MLInputDodger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		360F92211B65C6CD00A6F9F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		360F92221B65C6CD00A6F9F4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -46,7 +44,9 @@
 		360F923C1B65C6CD00A6F9F4 /* MLInputDodgerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MLInputDodgerTests.m; sourceTree = "<group>"; };
 		360F92501B6747D500A6F9F4 /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
 		360F92511B6747D500A6F9F4 /* ListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewController.m; sourceTree = "<group>"; };
-		7045DECD382026584C71989F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		4B117A4DB5AC02312D32641D /* Pods-MLInputDodger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MLInputDodger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MLInputDodger/Pods-MLInputDodger.debug.xcconfig"; sourceTree = "<group>"; };
+		9A086C4D7472B5F3FD41B136 /* libPods-MLInputDodger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MLInputDodger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E165DFBEECF6E5AD6EB58492 /* Pods-MLInputDodger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MLInputDodger.release.xcconfig"; path = "Pods/Target Support Files/Pods-MLInputDodger/Pods-MLInputDodger.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,7 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36E996DEF95BB1C72F73D7F0 /* libPods.a in Frameworks */,
+				0D24B18045B8CBB8E0D1C875 /* libPods-MLInputDodger.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,23 +68,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0B72DA3570746A4CE2273058 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				7045DECD382026584C71989F /* Pods.debug.xcconfig */,
-				1C08626793022444E3866A14 /* Pods.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		360F92141B65C6CD00A6F9F4 = {
 			isa = PBXGroup;
 			children = (
 				360F921F1B65C6CD00A6F9F4 /* MLInputDodger */,
 				360F92391B65C6CD00A6F9F4 /* MLInputDodgerTests */,
 				360F921E1B65C6CD00A6F9F4 /* Products */,
-				0B72DA3570746A4CE2273058 /* Pods */,
-				D075C921D89EAFBB0338941B /* Frameworks */,
+				B63E24B991B342048DCFA23C /* Pods */,
+				DCAB5401D4BF6ECB9DE7E407 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -140,10 +131,19 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		D075C921D89EAFBB0338941B /* Frameworks */ = {
+		B63E24B991B342048DCFA23C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0B846FD30C3C7D8134CF5C6A /* libPods.a */,
+				4B117A4DB5AC02312D32641D /* Pods-MLInputDodger.debug.xcconfig */,
+				E165DFBEECF6E5AD6EB58492 /* Pods-MLInputDodger.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		DCAB5401D4BF6ECB9DE7E407 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9A086C4D7472B5F3FD41B136 /* libPods-MLInputDodger.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -155,11 +155,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 360F92401B65C6CD00A6F9F4 /* Build configuration list for PBXNativeTarget "MLInputDodger" */;
 			buildPhases = (
-				7A08E75C66F704C72D63CBC4 /* Check Pods Manifest.lock */,
+				D40D56BE49BEF40B31B01BE4 /* [CP] Check Pods Manifest.lock */,
 				360F92191B65C6CD00A6F9F4 /* Sources */,
 				360F921A1B65C6CD00A6F9F4 /* Frameworks */,
 				360F921B1B65C6CD00A6F9F4 /* Resources */,
-				A759AC8C1BFF460A9E833363 /* Copy Pods Resources */,
+				5B630EB0CC9E59349FFD0259 /* [CP] Embed Pods Frameworks */,
+				5EE3F81FC1B9EC0F0AD37B53 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -199,9 +200,11 @@
 				TargetAttributes = {
 					360F921C1B65C6CD00A6F9F4 = {
 						CreatedOnToolsVersion = 6.3.2;
+						DevelopmentTeam = PDL85JB6BQ;
 					};
 					360F92351B65C6CD00A6F9F4 = {
 						CreatedOnToolsVersion = 6.3.2;
+						DevelopmentTeam = PDL85JB6BQ;
 						TestTargetID = 360F921C1B65C6CD00A6F9F4;
 					};
 				};
@@ -246,34 +249,49 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7A08E75C66F704C72D63CBC4 /* Check Pods Manifest.lock */ = {
+		5B630EB0CC9E59349FFD0259 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MLInputDodger/Pods-MLInputDodger-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5EE3F81FC1B9EC0F0AD37B53 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MLInputDodger/Pods-MLInputDodger-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D40D56BE49BEF40B31B01BE4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		A759AC8C1BFF460A9E833363 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -410,10 +428,11 @@
 		};
 		360F92411B65C6CD00A6F9F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7045DECD382026584C71989F /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 4B117A4DB5AC02312D32641D /* Pods-MLInputDodger.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = PDL85JB6BQ;
 				INFOPLIST_FILE = MLInputDodger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -423,10 +442,11 @@
 		};
 		360F92421B65C6CD00A6F9F4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C08626793022444E3866A14 /* Pods.release.xcconfig */;
+			baseConfigurationReference = E165DFBEECF6E5AD6EB58492 /* Pods-MLInputDodger.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = PDL85JB6BQ;
 				INFOPLIST_FILE = MLInputDodger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -438,6 +458,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = PDL85JB6BQ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -457,6 +478,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = PDL85JB6BQ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",

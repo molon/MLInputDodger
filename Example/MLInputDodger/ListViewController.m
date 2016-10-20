@@ -16,7 +16,9 @@
 
 @end
 
-@implementation ListViewController
+@implementation ListViewController {
+    BOOL _appeared; //是否曾经appear过一次
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -58,8 +60,15 @@
 {
     [super viewDidAppear:animated];
     
-    self.tableView.shiftHeightAsDodgeViewForMLInputDodger = 60.0f;
-    [self.tableView registerAsDodgeViewForMLInputDodgerWithOriginalContentInset:self.tableView.contentInset];
+    if (!_appeared) {
+        self.tableView.shiftHeightAsDodgeViewForMLInputDodger = 60.0f;
+        
+        //Because `self.automaticallyAdjustsScrollViewInsets==YES` , the contentInset have already been set.
+        //So we excute the method here.
+        //But we must ensure that excute it once here, we only want to restore the contentInset to the most primitive value.
+        [self.tableView registerAsDodgeViewForMLInputDodgerWithOriginalContentInset:self.tableView.contentInset];
+        _appeared = YES;
+    }
 }
 
 #pragma mark - event

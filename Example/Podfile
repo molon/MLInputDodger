@@ -1,4 +1,11 @@
-source 'https://github.com/CocoaPods/Specs.git'
+#source 'https://github.com/CocoaPods/Specs.git'
+
 platform :ios, '7.0'
 
-pod 'MLInputDodger', :path => '../MLInputDodger.podspec'
+workspace 'MLInputDodger.xcworkspace'
+
+target 'MLInputDodger' do
+	project 'MLInputDodger.xcodeproj'
+    
+	pod 'MLInputDodger', :path => '../MLInputDodger.podspec'
+end
