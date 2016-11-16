@@ -10,18 +10,18 @@ but if you use this library, star it if you like. :)**
 ![MLInputDodger](https://raw.githubusercontent.com/molon/MLInputDodger/master/MLInputDodger.gif)
 
 # Advantage
-- Automatic processing of keyboard-related events with little code, not affect global and no special view or viewController to inherit, so it's flexible.
-- Provied a optional default retractButton which can be clicked to hide keyboard. 
-- Use `animateAlongsideBlock` to add your own dodge behaviors for other view or trigger other behavior.
+- Automatic processing of keyboard-related events with little code, not affect global and no special view or viewController nee to be inherited, so it's flexible.
+- Provide a optional default retractButton which can be clicked to hide keyboard. 
+- Use `animateAlongsideBlock` to add your own dodge behaviors for other views or to trigger other behaviors.
 - With transition complete of two vc, the dodge behavior would be triggered again, ensure dodge behavior.
-- Fixed iOS8's bug: `UIKeyboardFrameEndUserInfoKey` return strange `origin.y` sometimes
-- Fixed SougouInput's bug: it will produces a ungly spring animation sometimes
+- Fixed iOS8's bug: `UIKeyboardFrameEndUserInfoKey` return strange `origin.y` sometimes.
+- Fixed SougouInput's bug: it produces a ungly spring animation sometimes.
 
 
 # Principle
 
 - The `dodgeView` means which view need to be change frame or change contentOffset(contentInset)
-- All subviews who can `becomeFirstResponder` of the `dodgeView` will trigger the dodge behavior. 
+- All subviews which can `becomeFirstResponder` in the `dodgeView` will trigger the dodge behavior. 
 - The `inputView` of subviews maybe not only keyboard. It's ok, this is why the library named `MLInputDodger` not `MLKeyboardDodger`. :)
 
 
@@ -36,7 +36,7 @@ but if you use this library, star it if you like. :)**
     [self.view registerAsDodgeViewForMLInputDodgerWithOriginalY:self.view.frame.origin.y];
 }
 ```   
-Then the subviews who can becomeFirstResponder will trigger dodge.  
+Then the subviews which can becomeFirstResponder will trigger dodge.  
 If you need custom shiftHeight for special responder, just set the `shiftHeightAsFirstResponderForMLInputDodger` property.  
    
    
