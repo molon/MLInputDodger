@@ -3,6 +3,8 @@
 [![CocoaPods](http://img.shields.io/cocoapods/v/MLInputDodger.svg?style=flat)](http://cocoapods.org/?q=MLInputDodger)&nbsp;
 [![CocoaPods](http://img.shields.io/cocoapods/p/MLInputDodger.svg?style=flat)](http://cocoapods.org/?q=MLInputDodger)&nbsp;
 [![Build Status](https://travis-ci.org/molon/MLInputDodger.svg?branch=master)](https://travis-ci.org/molon/MLInputDodger)&nbsp;
+[![Apps Using](https://img.shields.io/badge/Apps%20Using-%3E344-28B9FE.svg)](http://cocoapods.org/pods/MLInputDodger)&nbsp;
+[![Downloads](https://img.shields.io/badge/Total%20Downloads-%3E7,832-28B9FE.svg)](http://cocoapods.org/pods/MLInputDodger)&nbsp;
 
 **My library does not seek any reward,
 but if you use this library, star it if you like. :)**
