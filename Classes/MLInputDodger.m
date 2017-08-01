@@ -8,6 +8,23 @@
 
 #import "MLInputDodger.h"
 
+@interface UIView(_MLInputDodger_UIViewController)
+@end
+
+@implementation UIView(_MLInputDodger_UIViewController)
+
+- (UIViewController *)_MLInputDodger_viewController {
+    for (UIView *view = self; view; view = view.superview) {
+        UIResponder *nextResponder = [view nextResponder];
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)nextResponder;
+        }
+    }
+    return nil;
+}
+
+@end
+
 @interface MLInputDodger()
 
 /**
@@ -193,16 +210,29 @@
 
 - (void)keyboardWillShow:(NSNotification *)notification
 {
-//    NSLog(@"keyboardWillShow:%@",NSStringFromCGRect([[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue]));
-    BOOL animated = YES;
-    if ([self.lastFirstResponderViewForShowInputView isEqual:self.firstResponderView]) {
-        animated = NO;
+    void (^block)() = ^{
+        //    NSLog(@"keyboardWillShow:%@",NSStringFromCGRect([[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue]));
+        
+        BOOL animated = YES;
+        if ([self.lastFirstResponderViewForShowInputView isEqual:self.firstResponderView]) {
+            animated = NO;
+        }
+        
+        self.lastFirstResponderViewForShowInputView = self.firstResponderView;
+        
+        [self updateInputViewDetailWithKeyboardNotification:notification];
+        [self doDodgeWithAnimated:animated];
+    };
+    
+    if (!self.firstResponderView) {
+        //We must as much as possible to ensure that firstResponderView is not empty before block
+        //Sometimes first responder view is nil when run to this time
+        dispatch_async(dispatch_get_main_queue(), ^{
+            block();
+        });
+    }else{
+        block();
     }
-    
-    self.lastFirstResponderViewForShowInputView = self.firstResponderView;
-    
-    [self updateInputViewDetailWithKeyboardNotification:notification];
-    [self doDodgeWithAnimated:animated];
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
@@ -313,13 +343,15 @@
         offset.y = fmin(offset.y, dodgeView.contentSize.height-CGRectGetHeight(dodgeViewFrameInWindow)+inset.bottom);
         offset.y = fmax(offset.y, -inset.top);
         
-        id nextResponder = [dodgeView nextResponder];
-        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+        UIViewController *vc = [dodgeView _MLInputDodger_viewController];
+        if (vc) {
             //with pop viewcontroller,the previous viewcontroller.view's frame will be reset.
             //so we detect it, and dodge again
-            if ([((UIViewController*)nextResponder).transitionCoordinator isAnimated]){
-                [((UIViewController*)nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                    dodgeBlock(inset,offset);
+            if ([vc.transitionCoordinator isAnimated]){
+                [vc.transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                    if (![context isCancelled]) {
+                        dodgeBlock(inset,offset);
+                    }
                 }];
                 return;
             }
@@ -413,13 +445,15 @@
         //ensure that the view will not move down
         newY = fmin(newY, oldY);
         
-        id nextResponder = [dodgeView nextResponder];
-        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+        UIViewController *vc = [dodgeView _MLInputDodger_viewController];
+        if (vc) {
             //with pop viewcontroller,the previous viewcontroller.view's frame will be reset.
             //so we detect it, and dodge again
-            if ([((UIViewController*)nextResponder).transitionCoordinator isAnimated]){
-                [((UIViewController*)nextResponder).transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                    dodgeBlock(newY);
+            if ([vc.transitionCoordinator isAnimated]){
+                [vc.transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                    if (![context isCancelled]) {
+                        dodgeBlock(newY);
+                    }
                 }];
                 return;
             }
