@@ -73,3 +73,14 @@ __weak __typeof(self)weakSelf = self;
         sSelf.testAnimateAlongsideLabel.frame = frame;
     }];
 ```
+
+# Tips
+You can add this category to disable automatic keyboard for `UITableViewController`, or it will affect the implementation of the library.
+But `_adjustForAutomaticKeyboardInfo:animated:lastAdjustment:` is a private api, so...
+```
+@implementation UITableView(DisableAutomaticKeyboard)
+- (void)_adjustForAutomaticKeyboardInfo:(id)arg1 animated:(BOOL)arg2 lastAdjustment:(float*)arg3 {
+    return;
+}
+@end
+```
